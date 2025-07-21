@@ -112,6 +112,26 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'ungasan' => [
+            'driver' => 'mysql',
+            'url' => env('UDB_URL'),
+            'host' => env('UDB_HOST', '127.0.0.1'),
+            'port' => env('UDB_PORT', '3306'),
+            'database' => env('UDB_DATABASE', 'laravel'),
+            'username' => env('UDB_USERNAME', 'root'),
+            'password' => env('UDB_PASSWORD', ''),
+            'unix_socket' => env('UDB_SOCKET', ''),
+            'charset' => env('UDB_CHARSET', 'utf8mb4'),
+            'collation' => env('UDB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
     ],
 
     /*
