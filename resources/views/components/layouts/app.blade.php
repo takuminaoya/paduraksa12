@@ -8,8 +8,14 @@
     <title>{{ $title ?? env('APP_NAME') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('storage/images/icon.png') }}">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @filamentStyles
+    
+    {{ filament()->getTheme()->getHtml() }}
+    {{ filament()->getFontHtml() }}
+    {{ filament()->getMonoFontHtml() }}
+    {{ filament()->getSerifFontHtml() }}
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body {
@@ -26,7 +32,7 @@
 <body>
     {{ $slot }}
 
-    @filamentScripts
+    @filamentScripts(withCore: true)
 </body>
 
 </html>
