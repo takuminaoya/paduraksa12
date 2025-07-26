@@ -1,5 +1,5 @@
 <header
-    class="fixed w-full py-6 h-24 text-lg flex justify-between transition-all duration-200 bg-red-700 items-center px-6 text-white z-50"
+    class="fixed w-full py-6 h-24 text-lg flex justify-between transition-all duration-200 bg-red-700 items-center px-6 text-white z-20"
     :class="{ 'h-24': !scrolledFromTop, 'h-12': scrolledFromTop }">
     <a href="/" class="font-bold flex flex-row justify-center items-center gap-1">
         <img src="{{ asset('storage/images/icon_trans.png') }}" class="h-11" alt="">

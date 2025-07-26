@@ -1,6 +1,6 @@
 <x-layouts.base>
     <section id="content" class="flex flex-row justify-center">
-        <div class="form-container w-4xl shadow-md -mt-50 z-40 bg-white p-10">
+        <div class="form-container w-4xl shadow-md -mt-50 z-10 bg-white p-10">
             @livewire('create-laporan')
         </div>
     </section>
@@ -68,8 +68,13 @@
 
     <section id="jumlah" class="flex flex-row justify-center">
         <div class="w-full py-25 text-center bg-red-700 text-white">
-            <h5 class="font-bold text-3xl">Jumlah Laporan</h5>
-            <h1 class="font-bold text-5xl mt-10">{{ $laporans['total'] }}</h1>
+            <h5 class="font-bold text-3xl">Jumlah  Yang Terdaftar Pada Sistem</h5>
+            <h1 class="font-bold text-5xl mt-5">{{ $laporans['total'] }} Laporan</h1>
+
+            <div class="btn lg:col-span-5 flex flex-row justify-center items-center mt-10">
+                <a href="/publik" wire:navigate
+                    class="border-2 rounded px-5 py-3 font-bold border-white text-white hover:bg-white hover:text-red-300">LIHAT SEMUA LAPORAN</a>
+            </div>
         </div>
     </section>
 

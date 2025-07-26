@@ -95,10 +95,7 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                                 ->maxLength(16)
                                 ->required(),
                             TextInput::make('nama')
-                                ->required(),
-                            TextInput::make('judul')
-                                ->required()
-                                ->columnSpanFull(),
+                        ->required(),
                             Textarea::make('alamat')
                                 ->required()
                                 ->columnSpanFull(),
