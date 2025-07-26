@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->databaseNotifications()
+            ->databaseNotificationsPolling('10s')
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])

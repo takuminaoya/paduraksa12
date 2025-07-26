@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanMasyarakatsTable
 {
@@ -31,14 +32,18 @@ class LaporanMasyarakatsTable
                     ->date()
                     ->sortable(),
                 TextColumn::make('lokasi_kejadian')
+                ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('banjar_kejadian')
+                ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 ToggleColumn::make('anonim'),
                 ToggleColumn::make('rahasia')
                     ->searchable(),
                 TextColumn::make('nama')
                     ->searchable(),
+            TextColumn::make('status')
+                ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -67,10 +72,12 @@ class LaporanMasyarakatsTable
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make()
-                        ->icon('tabler-edit'),
+                    ->icon('tabler-edit'),
                     EditAction::make()
+                    ->color(Color::Orange)
                         ->icon('tabler-x'),
-                ])
+
+            ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

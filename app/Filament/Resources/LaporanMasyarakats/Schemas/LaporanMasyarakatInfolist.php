@@ -25,6 +25,9 @@ class LaporanMasyarakatInfolist
                             ->label('UUID'),
                         TextEntry::make('klasifikasi'),
                         TextEntry::make('judul'),
+                TextEntry::make('isi')
+                    ->html()
+                    ->columnSpanFull(),
                         TextEntry::make('tanggal_kejadian')
                             ->date(),
                         TextEntry::make('lokasi_kejadian'),
@@ -35,7 +38,10 @@ class LaporanMasyarakatInfolist
                         TextEntry::make('rahasia')
                             ->badge()
                             ->formatStateUsing(fn($record): string => $record->rahasia ? 'Dirahasiakan' : 'Publik'),
+                TextEntry::make('status')
+                    ->badge(),
                         ImageEntry::make('lampiran')
+                    ->columnSpanFull()
                             ->disk('public'),
                     ]),
 

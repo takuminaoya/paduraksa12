@@ -18,4 +18,9 @@ class EditLaporanMasyarakat extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    public function getRelationManagers(): array
+    {
+        return [];
+    }
 }

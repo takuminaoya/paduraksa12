@@ -2,22 +2,24 @@
 
 namespace App\Filament\Resources\LaporanMasyarakats;
 
-use App\Filament\Resources\LaporanMasyarakats\Pages\CreateLaporanMasyarakat;
-use App\Filament\Resources\LaporanMasyarakats\Pages\EditLaporanMasyarakat;
-use App\Filament\Resources\LaporanMasyarakats\Pages\ListLaporanMasyarakats;
-use App\Filament\Resources\LaporanMasyarakats\Pages\ViewLaporanMasyarakat;
-use App\Filament\Resources\LaporanMasyarakats\Schemas\LaporanMasyarakatForm;
-use App\Filament\Resources\LaporanMasyarakats\Schemas\LaporanMasyarakatInfolist;
-use App\Filament\Resources\LaporanMasyarakats\Tables\LaporanMasyarakatsTable;
-use App\Models\LaporanMasyarakat;
-use BackedEnum;
 use UnitEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+use BackedEnum;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Resources\Resource;
+use App\Models\LaporanMasyarakat;
+use Filament\Support\Icons\Heroicon;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use App\Filament\Resources\LaporanMasyarakats\Pages\EditLaporanMasyarakat;
+use App\Filament\Resources\LaporanMasyarakats\Pages\ViewLaporanMasyarakat;
+use App\Filament\Resources\LaporanMasyarakats\Pages\ListLaporanMasyarakats;
+use App\Filament\Resources\LaporanMasyarakats\Pages\CreateLaporanMasyarakat;
+use App\Filament\Resources\LaporanMasyarakats\RelationManagers\AutorisasisRelationManager;
+use App\Filament\Resources\LaporanMasyarakats\Schemas\LaporanMasyarakatForm;
+use App\Filament\Resources\LaporanMasyarakats\Tables\LaporanMasyarakatsTable;
+use App\Filament\Resources\LaporanMasyarakats\Schemas\LaporanMasyarakatInfolist;
 
-class LaporanMasyarakatResource extends Resource
+class LaporanMasyarakatResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = LaporanMasyarakat::class;
 
@@ -42,7 +44,24 @@ class LaporanMasyarakatResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AutorisasisRelationManager::class
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'verifikasi',
+            'tindak_lanjut',
+            'selesai',
+            'batal',
+            'hapus_autoritas'
         ];
     }
 

@@ -63,7 +63,7 @@ class LaporanMasyarakatPolicy
      */
     public function forceDelete(User $user, LaporanMasyarakat $laporanMasyarakat): bool
     {
-        return $user->can('force_delete_laporan::masyarakats::laporan::masyarakat');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class LaporanMasyarakatPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_laporan::masyarakats::laporan::masyarakat');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class LaporanMasyarakatPolicy
      */
     public function restore(User $user, LaporanMasyarakat $laporanMasyarakat): bool
     {
-        return $user->can('restore_laporan::masyarakats::laporan::masyarakat');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class LaporanMasyarakatPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_laporan::masyarakats::laporan::masyarakat');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class LaporanMasyarakatPolicy
      */
     public function replicate(User $user, LaporanMasyarakat $laporanMasyarakat): bool
     {
-        return $user->can('replicate_laporan::masyarakats::laporan::masyarakat');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class LaporanMasyarakatPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_laporan::masyarakats::laporan::masyarakat');
+        return $user->can('{{ Reorder }}');
     }
 }
