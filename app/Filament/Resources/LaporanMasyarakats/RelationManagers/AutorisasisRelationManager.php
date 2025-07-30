@@ -2,26 +2,31 @@
 
 namespace App\Filament\Resources\LaporanMasyarakats\RelationManagers;
 
+use BackedEnum;
+use Filament\Tables\Table;
 use App\Enum\TipeAutorisasi;
-use Filament\Actions\AssociateAction;
-use Filament\Actions\BulkActionGroup;
+use Filament\Actions\Action;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\AssociateAction;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
-use Filament\Actions\DissociateBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Filament\Forms\Components\TextInput;
+use Filament\Actions\DissociateBulkAction;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class AutorisasisRelationManager extends RelationManager
 {
     protected static string $relationship = 'autorisasis';
     protected static ?string $title = 'Daftar Autorisasi Dokumen';
+    protected static string | BackedEnum | null $icon = 'tabler-user';
 
     public function form(Schema $schema): Schema
     {
@@ -63,8 +68,26 @@ class AutorisasisRelationManager extends RelationManager
             ])
             ->headerActions([])
             ->recordActions([
-                DeleteAction::make()
-                    ->hidden(fn(): bool => !user()->hasRole('super_admin')),
+                ActionGroup::make([
+                    DeleteAction::make()
+                        ->hidden(fn(): bool => !user()->hasRole('super_admin')),
+                    Action::make('lihat_lampiran')
+                        ->label('Lihat Lampiran')
+                        ->icon('tabler-eye')
+                        ->visible(fn($record): bool => $record->lampiran ? true : false)
+                        ->url(fn($record): string => asset('storage/' . $record->lampiran))
+                        ->openUrlInNewTab(),
+                    Action::make('download_lampiran')
+                        ->label('Download Lampiran')
+                        ->icon('tabler-download')
+                        ->visible(fn($record): bool => $record->lampiran ? true : false)
+                        ->action(
+                            function ($record) {
+                                return Storage::disk('public')->download($record->lampiran);
+                            }
+                        )
+                        ->openUrlInNewTab()
+                ])->dropdownPlacement('top-end')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

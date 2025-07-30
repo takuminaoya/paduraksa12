@@ -5,16 +5,18 @@ namespace App\Filament\Resources\LaporanMasyarakats\Pages;
 use Carbon\Carbon;
 use App\Enum\TipeAutorisasi;
 use Filament\Actions\Action;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\EditAction;
 use App\Models\LaporanAutorisasi;
+use Filament\Actions\ActionGroup;
+use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Auth;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use App\Filament\Resources\LaporanMasyarakats\LaporanMasyarakatResource;
-use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Support\Colors\Color;
+use App\Filament\Resources\LaporanMasyarakats\LaporanMasyarakatResource;
+use Illuminate\Support\Facades\Storage;
 
 class ViewLaporanMasyarakat extends ViewRecord
 {
@@ -46,160 +48,205 @@ class ViewLaporanMasyarakat extends ViewRecord
                     }),
                 EditAction::make()
                     ->icon('tabler-edit'),
-                Action::make('verifikasi_laporan')
-                    ->color(Color::Blue)
-                    ->icon('tabler-signature')
-                    ->authorize('verifikasi_laporan::masyarakats::laporan::masyarakat')
-                    ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::VERIFIKASI))
+                Action::make('print')
+                    ->hidden(fn ($livewire) : bool => $livewire->record->autorisasi(TipeAutorisasi::PROSES))
                     ->requiresConfirmation()
+                    ->icon('tabler-printer')
                     ->action(
-                        function ($record): void {
+                        function ($record) {
+
                             $user = Auth::user();
                             LaporanAutorisasi::create([
                                 'user_id' => $user->id,
                                 'laporan_masyarakat_id' => $record->id,
-                                'tipe_autorisasi' => TipeAutorisasi::VERIFIKASI,
-                                'tanggal_autorisasi' => Carbon::now()
-                            ]);
-
-                            $record->status = TipeAutorisasi::VERIFIKASI;
-                            $record->save();
-
-                            Notification::make()
-                                ->title('Laporan telah terverifikasi oleh ' . $user->name)
-                                ->success()
-                                ->actions([
-                                    Action::make('view')
-                                        ->url($record->id)
-                                        ->button()
-                                        ->markAsUnread(),
-                                ])
-                                ->sendToDatabase(superAdmin())
-                                ->send()
-                            ;
-                        }
-                    ),
-                Action::make('tindak_lanjut_laporan')
-                    ->icon('tabler-trekking')
-                    ->color(Color::Emerald)
-                    ->authorize('tindak_lanjut_laporan::masyarakats::laporan::masyarakat')
-                    ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::TINDAK_LANJUT))
-                    ->schema([
-                        MarkdownEditor::make('deskripsi')
-                            ->required(),
-                        FileUpload::make('lampiran')
-                            ->visibility('public')
-                            ->directory('autoritas_lampiran')
-                            ->disk('public')
-                            ->multiple()
-                    ])
-                    ->action(
-                        function ($data, $record): void {
-                            $user = Auth::user();
-                            LaporanAutorisasi::create([
-                                'user_id' => $user->id,
-                                'laporan_masyarakat_id' => $record->id,
-                                'tipe_autorisasi' => TipeAutorisasi::TINDAK_LANJUT,
+                                'tipe_autorisasi' => TipeAutorisasi::PROSES,
                                 'tanggal_autorisasi' => Carbon::now(),
-                                'deskripsi' => $data['deskripsi'],
-                                'lampiran' => $data['lampiran'],
+                                'lampiran' => $record->tiket . '.pdf',
                             ]);
 
-                            $record->status = TipeAutorisasi::TINDAK_LANJUT;
+                            $record->status = TipeAutorisasi::PROSES;
                             $record->save();
 
+                            $pdf = Pdf::loadView('print.test')->save($record->tiket . '.pdf', 'public');
+
+                            $path = $record->tiket . '.pdf';
+
                             Notification::make()
-                                ->title('Laporan telah ditindak lanjuti oleh ' . $user->name)
+                                ->title('Print telah selesai.')
                                 ->actions([
-                                    Action::make('view')
-                                        ->url($record->id)
+                                    Action::make('lihat')
+                                        ->url(asset('storage/' . $record->tiket . '.pdf'))
+                                        ->openUrlInNewTab()
                                         ->button()
                                         ->markAsUnread(),
                                 ])
                                 ->success()
                                 ->sendToDatabase(superAdmin())
                                 ->send();
+
+                            return Storage::disk('public')->download($path);
                         }
                     ),
-                Action::make('batal_laporan')
-                    ->icon('tabler-x')
-                    ->color(Color::Red)
-                    ->authorize('batal_laporan::masyarakats::laporan::masyarakat')
-                    ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::BATAL))
-                    ->schema([
-                        MarkdownEditor::make('deskripsi')
-                            ->label('alasan')
-                            ->required(),
-                    ])
-                    ->action(
-                        function ($data, $record): void {
-                            $user = Auth::user();
-                            LaporanAutorisasi::create([
-                                'user_id' => $user->id,
-                                'laporan_masyarakat_id' => $record->id,
-                                'tipe_autorisasi' => TipeAutorisasi::BATAL,
-                                'tanggal_autorisasi' => Carbon::now(),
-                                'deskripsi' => $data['deskripsi'],
-                            ]);
 
-                            $record->status = TipeAutorisasi::BATAL;
-                            $record->save();
+                // muncul setelah proses
+                ActionGroup::make([
+                    Action::make('verifikasi_laporan')
+                        ->color(Color::Blue)
+                        ->icon('tabler-signature')
+                        ->authorize('verifikasi_laporan::masyarakats::laporan::masyarakat')
+                        ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::VERIFIKASI))
+                        ->requiresConfirmation()
+                        ->action(
+                            function ($record): void {
+                                $user = Auth::user();
+                                LaporanAutorisasi::create([
+                                    'user_id' => $user->id,
+                                    'laporan_masyarakat_id' => $record->id,
+                                    'tipe_autorisasi' => TipeAutorisasi::VERIFIKASI,
+                                    'tanggal_autorisasi' => Carbon::now()
+                                ]);
 
-                            Notification::make()
-                                ->title('Laporan telah dibatalkan oleh ' . $user->name)
-                                ->actions([
-                                    Action::make('view')
-                                        ->url($record->id)
-                                        ->button()
-                                        ->markAsUnread(),
-                                ])
-                                ->success()
-                                ->sendToDatabase(superAdmin())
-                                ->send();
-                        }
-                    ),
-                Action::make('selesai_laporan')
-                    ->icon('tabler-checks')
-                    ->color(Color::Green)
-                    ->authorize('selesai_laporan::masyarakats::laporan::masyarakat')
-                    ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::SELESAI))
-                    ->schema([
-                        MarkdownEditor::make('deskripsi')
-                            ->required(),
-                        FileUpload::make('lampiran')
-                            ->visibility('public')
-                            ->directory('autoritas_lampiran')
-                            ->disk('public')
-                            ->multiple()
-                    ])
-                    ->action(
-                        function ($data, $record): void {
-                            $user = Auth::user();
-                            LaporanAutorisasi::create([
-                                'user_id' => $user->id,
-                                'laporan_masyarakat_id' => $record->id,
-                                'tipe_autorisasi' => TipeAutorisasi::SELESAI,
-                                'tanggal_autorisasi' => Carbon::now(),
-                                'deskripsi' => $data['deskripsi'],
-                                'lampiran' => $data['lampiran'],
-                            ]);
+                                $record->status = TipeAutorisasi::VERIFIKASI;
+                                $record->save();
 
-                            $record->status = TipeAutorisasi::SELESAI;
-                            $record->save();
+                                Notification::make()
+                                    ->title('Laporan telah terverifikasi oleh ' . $user->name)
+                                    ->success()
+                                    ->actions([
+                                        Action::make('view')
+                                            ->url($record->id)
+                                            ->button()
+                                            ->markAsUnread(),
+                                    ])
+                                    ->sendToDatabase(superAdmin())
+                                    ->send()
+                                ;
+                            }
+                        ),
+                    Action::make('tindak_lanjut_laporan')
+                        ->icon('tabler-trekking')
+                        ->color(Color::Emerald)
+                        ->authorize('tindak_lanjut_laporan::masyarakats::laporan::masyarakat')
+                        ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::TINDAK_LANJUT))
+                        ->schema([
+                            MarkdownEditor::make('deskripsi')
+                                ->required(),
+                            FileUpload::make('lampiran')
+                                ->visibility('public')
+                                ->directory('autoritas_lampiran')
+                                ->disk('public')
+                                ->multiple()
+                        ])
+                        ->action(
+                            function ($data, $record): void {
+                                $user = Auth::user();
+                                LaporanAutorisasi::create([
+                                    'user_id' => $user->id,
+                                    'laporan_masyarakat_id' => $record->id,
+                                    'tipe_autorisasi' => TipeAutorisasi::TINDAK_LANJUT,
+                                    'tanggal_autorisasi' => Carbon::now(),
+                                    'deskripsi' => $data['deskripsi'],
+                                    'lampiran' => $data['lampiran'],
+                                ]);
 
-                            Notification::make()
-                                ->title('Laporan telah diselesaikan oleh ' . $user->name)
-                                ->actions([
-                                    Action::make('view')
-                                        ->url($record->id)
-                                        ->button()
-                                        ->markAsUnread(),
-                                ])
-                                ->success()
-                                ->sendToDatabase(superAdmin())
-                                ->send();
-                        }
-                    ),
+                                $record->status = TipeAutorisasi::TINDAK_LANJUT;
+                                $record->save();
+
+                                Notification::make()
+                                    ->title('Laporan telah ditindak lanjuti oleh ' . $user->name)
+                                    ->actions([
+                                        Action::make('view')
+                                            ->url($record->id)
+                                            ->button()
+                                            ->markAsUnread(),
+                                    ])
+                                    ->success()
+                                    ->sendToDatabase(superAdmin())
+                                    ->send();
+                            }
+                        ),
+                    Action::make('batal_laporan')
+                        ->icon('tabler-x')
+                        ->color(Color::Red)
+                        ->authorize('batal_laporan::masyarakats::laporan::masyarakat')
+                        ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::BATAL))
+                        ->schema([
+                            MarkdownEditor::make('deskripsi')
+                                ->label('alasan')
+                                ->required(),
+                        ])
+                        ->action(
+                            function ($data, $record): void {
+                                $user = Auth::user();
+                                LaporanAutorisasi::create([
+                                    'user_id' => $user->id,
+                                    'laporan_masyarakat_id' => $record->id,
+                                    'tipe_autorisasi' => TipeAutorisasi::BATAL,
+                                    'tanggal_autorisasi' => Carbon::now(),
+                                    'deskripsi' => $data['deskripsi'],
+                                ]);
+
+                                $record->status = TipeAutorisasi::BATAL;
+                                $record->save();
+
+                                Notification::make()
+                                    ->title('Laporan telah dibatalkan oleh ' . $user->name)
+                                    ->actions([
+                                        Action::make('view')
+                                            ->url($record->id)
+                                            ->button()
+                                            ->markAsUnread(),
+                                    ])
+                                    ->success()
+                                    ->sendToDatabase(superAdmin())
+                                    ->send();
+                            }
+                        ),
+                    Action::make('selesai_laporan')
+                        ->icon('tabler-checks')
+                        ->color(Color::Green)
+                        ->authorize('selesai_laporan::masyarakats::laporan::masyarakat')
+                        ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::SELESAI))
+                        ->schema([
+                            MarkdownEditor::make('deskripsi')
+                                ->required(),
+                            FileUpload::make('lampiran')
+                                ->visibility('public')
+                                ->directory('autoritas_lampiran')
+                                ->disk('public')
+                                ->multiple()
+                        ])
+                        ->action(
+                            function ($data, $record): void {
+                                $user = Auth::user();
+                                LaporanAutorisasi::create([
+                                    'user_id' => $user->id,
+                                    'laporan_masyarakat_id' => $record->id,
+                                    'tipe_autorisasi' => TipeAutorisasi::SELESAI,
+                                    'tanggal_autorisasi' => Carbon::now(),
+                                    'deskripsi' => $data['deskripsi'],
+                                    'lampiran' => $data['lampiran'],
+                                ]);
+
+                                $record->status = TipeAutorisasi::SELESAI;
+                                $record->save();
+
+                                Notification::make()
+                                    ->title('Laporan telah diselesaikan oleh ' . $user->name)
+                                    ->actions([
+                                        Action::make('view')
+                                            ->url($record->id)
+                                            ->button()
+                                            ->markAsUnread(),
+                                    ])
+                                    ->success()
+                                    ->sendToDatabase(superAdmin())
+                                    ->send();
+                            }
+                        ),
+                ])
+                ->visible(fn ($livewire) : bool => $livewire->record->autorisasi(TipeAutorisasi::PROSES))
+                ->dropdown(false)
             ])
                 ->button()
                 ->hidden(function ($livewire): bool {

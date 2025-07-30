@@ -19,7 +19,7 @@ class LaporanMasyarakatInfolist
                     ->columns(2)
                     ->collapsible()
                     ->schema([
-                        TextEntry::make('uuid')
+                        TextEntry::make('tiket')
                             ->copyable()
                             ->icon('tabler-copy')
                             ->label('UUID'),

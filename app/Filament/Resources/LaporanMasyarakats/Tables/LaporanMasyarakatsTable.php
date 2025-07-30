@@ -4,6 +4,9 @@ namespace App\Filament\Resources\LaporanMasyarakats\Tables;
 
 use App\DummyLaporanGenerator;
 use App\Enum\KlasifikasiLaporan;
+use App\Enum\TipeAutorisasi;
+use App\GenerateTiket;
+use App\Modules\Whapify;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -24,6 +27,8 @@ class LaporanMasyarakatsTable
     {
         return $table
             ->columns([
+                TextColumn::make('tiket')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('klasifikasi')
                     ->searchable(),
                 TextColumn::make('judul')
@@ -32,18 +37,18 @@ class LaporanMasyarakatsTable
                     ->date()
                     ->sortable(),
                 TextColumn::make('lokasi_kejadian')
-                ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('banjar_kejadian')
-                ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 ToggleColumn::make('anonim'),
                 ToggleColumn::make('rahasia')
                     ->searchable(),
                 TextColumn::make('nama')
                     ->searchable(),
-            TextColumn::make('status')
-                ->badge(),
+                TextColumn::make('status')
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -53,9 +58,12 @@ class LaporanMasyarakatsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('klasifikasi')
-                    ->options(KlasifikasiLaporan::class)
+                    ->options(KlasifikasiLaporan::class),
+                SelectFilter::make('status')
+                    ->options(TipeAutorisasi::class)
             ])
             ->headerActions([
                 Action::make('Generate Dummy Data')
@@ -67,17 +75,31 @@ class LaporanMasyarakatsTable
                             $gen = new DummyLaporanGenerator(5);
                             $gen->generate();
                         }
-                    )
+                    ),
+                Action::make('generate_tiket')
+                    ->requiresConfirmation()
+                    ->icon('tabler-windmill')
+                    ->color(Color::Blue)
+                    ->action(
+                        function (): void {
+                            GenerateTiket::generate();
+
+                            Notification::make()
+                                ->title('Tiket telah berhasil digenerasi.')
+                                ->success()
+                                ->send();
+                        }
+                    ),
             ])
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make()
-                    ->icon('tabler-edit'),
+                        ->icon('tabler-edit'),
                     EditAction::make()
-                    ->color(Color::Orange)
+                        ->color(Color::Orange)
                         ->icon('tabler-x'),
 
-            ])
+                ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

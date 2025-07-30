@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-language-switch": "^4.0@beta",
         "bezhansalleh/filament-shield": "^4.0@beta",
         "filament/filament": "~4.0",

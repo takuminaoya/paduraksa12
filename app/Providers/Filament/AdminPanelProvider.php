@@ -59,6 +59,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->databaseNotificationsPolling('10s')
+            ->darkMode(false)
             ->plugins([
                 FilamentShieldPlugin::make(),
             ])
