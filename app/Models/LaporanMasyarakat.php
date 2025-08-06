@@ -20,6 +20,7 @@ class LaporanMasyarakat extends Model
     public static function getListOfTagsOnly(): array
     {
         return [
+            '[laporan.tiket]',
             '[laporan.klasifikasi]',
             '[laporan.judul]',
             '[laporan.isi]',
@@ -38,6 +39,7 @@ class LaporanMasyarakat extends Model
     public function getListOfTags(): array
     {
         return [
+            '[laporan.tiket]' => $this->tiket,
             '[laporan.klasifikasi]' => $this->klasifikasi,
             '[laporan.judul]' => $this->judul,
             '[laporan.isi]' => $this->isi,
@@ -59,6 +61,7 @@ class LaporanMasyarakat extends Model
 
         if ($data) {
             return [
+                '[laporan.tiket]' => $data->tiket,
                 '[laporan.klasifikasi]' => $data->klasifikasi,
                 '[laporan.judul]' => $data->judul,
                 '[laporan.isi]' => $data->isi,

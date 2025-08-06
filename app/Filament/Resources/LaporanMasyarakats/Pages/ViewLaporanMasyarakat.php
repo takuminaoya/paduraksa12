@@ -53,7 +53,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                     ->requiresConfirmation()
                     ->icon('tabler-printer')
                     ->action(
-                        function ($record) {
+                        function ($record, $livewire) {
 
                             $user = Auth::user();
                             LaporanAutorisasi::create([
@@ -61,15 +61,21 @@ class ViewLaporanMasyarakat extends ViewRecord
                                 'laporan_masyarakat_id' => $record->id,
                                 'tipe_autorisasi' => TipeAutorisasi::PROSES,
                                 'tanggal_autorisasi' => Carbon::now(),
-                                'lampiran' => $record->tiket . '.pdf',
+                                'lampiran' => $livewire->record->tiket . '.pdf',
                             ]);
 
                             $record->status = TipeAutorisasi::PROSES;
                             $record->save();
 
-                            $pdf = Pdf::loadView('print.test')->save($record->tiket . '.pdf', 'public');
+                            // $pdf = Pdf::loadView('print.test', [
+                            //     "data" => $livewire->record
+                            // ])->save($livewire->record->tiket . '.pdf', 'public');
 
-                            $path = $record->tiket . '.pdf';
+                            $pdf = Pdf::loadView('print.to', [
+                                "data" => $livewire->record
+                            ])->save($livewire->record->tiket . '.pdf', 'public');
+
+                            $path = $livewire->record->tiket . '.pdf';
 
                             Notification::make()
                                 ->title('Print telah selesai.')
@@ -135,7 +141,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                                 ->visibility('public')
                                 ->directory('autoritas_lampiran')
                                 ->disk('public')
-                                ->multiple()
+
                         ])
                         ->action(
                             function ($data, $record): void {
@@ -214,7 +220,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                                 ->visibility('public')
                                 ->directory('autoritas_lampiran')
                                 ->disk('public')
-                                ->multiple()
+
                         ])
                         ->action(
                             function ($data, $record): void {

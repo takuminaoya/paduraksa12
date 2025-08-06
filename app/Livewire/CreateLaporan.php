@@ -84,7 +84,7 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                                 ->required()
                                 ->columnSpanFull()
                                 ->options(KlasifikasiLaporan::class),
-                            Toggle::make('anonim'),
+                            // Toggle::make('anonim'),
                             Toggle::make('rahasia'),
                             FileUpload::make('lampiran')
                                 ->imageEditor()
@@ -161,7 +161,7 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
         // generate kode
         $kode = "";
         foreach (KlasifikasiKode::cases() as $c) {
-            if ($c->name == $lap->klasifikasi) {
+            if ($c->name == $lap->klasifikasi->value) {
                 $kode = $c->value;
             }
         }
