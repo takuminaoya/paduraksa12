@@ -1,12 +1,17 @@
+@props([
+    'size' => 'min-h-96'
+])
 <section>
-    <div id="hero" class="relative flex flex-row min-h-96 justify-center pt-40 pb-52 bg-red-700 text-white">
-        <div class="container w-full text-center pt-20">
+    <div id="hero" class="relative flex flex-row {{ $size }} justify-center lg:pt-40 pt-28 pb-52 bg-red-700 text-white">
+        <div class="container w-full text-center lg:pt-20 lg:mx-0 mx-5 pt-10">
             <h2 class="b text-4xl font-bold">Pengaduan Aspirasi Masyarakat Desa Ungasan</h2>
             <p class="text-xl mt-3 mb-10">Sampaikan laporan Anda langsung kepada instansi pemerintah desa ungasan.
             </p>
+
+            {{ $slot }}
         </div>
 
-        <svg class="absolute bottom-0" width="100%" height="160px" viewBox="0 0 1300 160" preserveAspectRatio="none"
+        <svg class="absolute bottom-0 lg:block hidden" width="100%" height="160px" viewBox="0 0 1300 160" preserveAspectRatio="none"
             version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g>
                 <path
@@ -26,4 +31,5 @@
         </svg>
     </div>
 
+    
 </section>

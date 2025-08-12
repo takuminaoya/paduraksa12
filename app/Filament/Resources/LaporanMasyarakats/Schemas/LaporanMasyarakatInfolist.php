@@ -23,11 +23,13 @@ class LaporanMasyarakatInfolist
                             ->copyable()
                             ->icon('tabler-copy')
                             ->label('UUID'),
+                        TextEntry::make('nomor_surat')
+                            ->state(fn ($record): string => $record->nomorSurat()),
                         TextEntry::make('klasifikasi'),
                         TextEntry::make('judul'),
-                TextEntry::make('isi')
-                    ->html()
-                    ->columnSpanFull(),
+                        TextEntry::make('isi')
+                            ->html()
+                            ->columnSpanFull(),
                         TextEntry::make('tanggal_kejadian')
                             ->date(),
                         TextEntry::make('lokasi_kejadian'),
@@ -38,10 +40,16 @@ class LaporanMasyarakatInfolist
                         TextEntry::make('rahasia')
                             ->badge()
                             ->formatStateUsing(fn($record): string => $record->rahasia ? 'Dirahasiakan' : 'Publik'),
-                TextEntry::make('status')
-                    ->badge(),
+                        TextEntry::make('status')
+                            ->badge(),
                         ImageEntry::make('lampiran')
-                    ->columnSpanFull()
+                            ->imageWidth('100%')
+                            ->imageHeight('100%')
+                            ->columnSpanFull()
+                            ->url(
+                                fn ($record) : string => asset('storage/' . $record->lampiran)
+                            )
+                            ->openUrlInNewTab()
                             ->disk('public'),
                     ]),
 

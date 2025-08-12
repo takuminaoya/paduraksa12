@@ -52,7 +52,18 @@ class WhatsappTemplateResource extends Resource
                             ->state('Klik salah satu Tag untuk mengkopi tag yang dapat digunakan pada penulisan template baru.'),
                         TextEntry::make('Daftar Laporan Masyarakat Tag')
                             ->label('Daftar Laporan Masyarakat Tag')
-                            ->state(LaporanMasyarakat::getListOfTagsOnly())
+                            ->state(
+                                function () : array {
+                                    $tags = LaporanMasyarakat::getListOfTagsOnly();
+                                    $results = [];
+
+                                    foreach($tags as $tag){
+                                        $results[] = "*" . $tag . "*";
+                                    }
+
+                                    return $results;
+                                }
+                            )
                             ->icon('tabler-copy')
                             ->copyable()
                             ->badge()
@@ -62,6 +73,7 @@ class WhatsappTemplateResource extends Resource
                     ])->modalSubmitAction(false),
                 Textarea::make('isi')
                     ->columnSpanFull()
+                    ->rows(15)
                     ->required(),
             ]);
     }

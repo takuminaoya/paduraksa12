@@ -1,8 +1,17 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use App\Modules\Whapify;
+use Filament\Actions\Action;
+use Illuminate\Support\Carbon;
+use App\Models\WhatsappLaporan;
+use App\Models\WhatsappTemplate;
+use App\Models\LaporanMasyarakat;
+use App\Models\ApplicationSetting;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Notifications\Notification;
+use Filament\Support\Colors\Color;
 
 function superAdmin(): User
 {
@@ -153,5 +162,59 @@ function dateReformat($tanggal, $tampilkanHari = false, $bulanDipersingkat = fal
         }
 
         return ($tampilkanHari) ? getDayname(date("w", $tanggal_totime)) . ", " . $date . $pemisah . getBulan($bulan, $bulanDipersingkat, $lang) . $pemisah . $tahun : $date . $pemisah . getBulan($bulan, $bulanDipersingkat, $lang) . $pemisah . $tahun . $pukul;
+    }
+}
+
+function autoSendWhatsapp($id, $status)
+{
+    $lap = LaporanMasyarakat::find($id);
+
+    if ($lap->auto_whatsapp) {
+        $template = ApplicationSetting::where('key', $lap->whatsapp_templates[$status]['slug'])->value('value');
+
+        $templateIsi = WhatsappTemplate::find($template);
+
+        $reformatedIsi = $lap->reformatStringWithTag($templateIsi->isi, $lap->id);
+
+        $message = Whapify::sendSingleChat('62' . $lap->no_telpon, $reformatedIsi);
+
+        if ($message) {
+            $detail = Whapify::getSingleChat($message['messageId']);
+
+            WhatsappLaporan::create([
+                'laporan_masyarakat_id' => $lap->id,
+                'whatsapp_id' => $message['messageId'],
+                'receipent' => $detail['recipient'],
+                'isi_pesan' => $detail['message'],
+                'dikirim_pada' => Carbon::createFromTimestamp($detail['created'])->toDateTimeString(),
+
+            ]);
+
+            $notif_route = url('admin/laporan-masyarakats/' . $lap->id);
+
+            Notification::make()
+                ->title('Whatsapp dengan penerima ' . $lap->nama . ' telam masuk queue.')
+                ->actions([
+                    Action::make('lihat_laporan')
+                        ->icon('tabler-eye')
+                        ->url($notif_route)
+                        ->button()
+                        ->markAsUnread(),
+                ])
+                ->success()
+                ->sendToDatabase(superAdmin())
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Nomor Whatsapp pemohon invalid. mohon pastikan nomor whatsapp telah benar. format seperti ini tanpa 0 didepannya cth: 82345678776')
+                ->danger()
+                ->actions([
+                    Action::make('ubah')
+                        ->icon('tabler-edit')
+                        ->color(Color::Amber)
+                        ->url(url('admin/laporan-masyarakats/'.$lap->id.'/edit'))
+                ])
+                ->sendToDatabase(Auth::user());
+        }
     }
 }

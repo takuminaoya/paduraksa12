@@ -52,6 +52,9 @@ class Whapify
         $response = $client->post(config('whapify.base_url') . 'send/whatsapp', $params);
         $body = json_decode($response->getBody(), true);
 
+        if($body['data'] == false)
+            return null;
+
         return collect($body['data']);
     }
 

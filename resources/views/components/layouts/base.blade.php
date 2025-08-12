@@ -4,7 +4,7 @@
     <x-layouts.header />
 
     {{-- Close your eyes. Count to one. That is how long forever feels. --}}
-    <x-layouts.hero />
+    {{-- <x-layouts.hero /> --}}
 
     {{ $slot }}
 

@@ -17,6 +17,55 @@ class LaporanMasyarakat extends Model
 
     ];
 
+    public $auto_whatsapp = true;
+    public $whatsapp_templates = [
+        'aktif' => [
+            'slug' => 'wa-lm-regis',
+            'judul' => 'Whatsapp Laporan Baru',
+        ],
+        'proses' => [
+            'slug' => 'wa-lm-proses',
+            'judul' => 'Whatsapp Laporan Diproses',
+        ],
+        'verifikasi' => [
+            'slug' => 'wa-lm-verifikasi',
+            'judul' => 'Whatsapp Laporan Verifikasi',
+        ],
+        'tindak_lanjut' => [
+            'slug' => 'wa-lm-tindak_lanjut',
+            'judul' => 'Whatsapp Laporan Ditindak lanjuti',
+        ],
+        'batal' => [
+            'slug' => 'wa-lm-batal',
+            'judul' => 'Whatsapp Laporan Dibatalkan',
+        ],
+        'selesai' => [
+            'slug' => 'wa-lm-selesai',
+            'judul' => 'Whatsapp Laporan Telah Selesai',
+        ],
+    ];
+
+    public $prefix = '500.2';
+    public $suffix = 'UNGASAN';
+    public $separator = "/";
+
+    public function nomorSurat(): string {
+        
+        if($this->autorisasi(TipeAutorisasi::SELESAI)){
+            $aut = $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'nomor_surat');
+
+            $raws = [
+                $this->prefix,
+                $aut,
+                $this->suffix
+            ];
+
+            return implode($this->separator, $raws);
+        }
+
+        return "-";
+    }
+
     public static function getListOfTagsOnly(): array
     {
         return [
@@ -33,6 +82,10 @@ class LaporanMasyarakat extends Model
             '[laporan.uuid]',
             '[laporan.created_at]',
             '[laporan.alasan]',
+            '[laporan.tindakan]',
+            '[laporan.link]',
+            '[laporan.url]',
+            '[laporan.nomor]',
         ];
     }
 
@@ -52,6 +105,11 @@ class LaporanMasyarakat extends Model
             '[laporan.uuid]' => $this->uuid,
             '[laporan.created_at]' => $this->created_at,
             '[laporan.alasan]' => $this->getAutorisasiString(TipeAutorisasi::BATAL, 'deskripsi'),
+            '[laporan.tindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
+            '[laporan.link]' => asset('storage/' . $this->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran')),
+            '[laporan.url]' => $this->url,
+            '[laporan.nomor]' => $this->nomor_surat,
+
         ];
     }
 
@@ -74,6 +132,11 @@ class LaporanMasyarakat extends Model
                 '[laporan.uuid]' => $data->uuid,
                 '[laporan.created_at]' => $data->created_at,
                 '[laporan.alasan]' => $data->getAutorisasiString(TipeAutorisasi::BATAL, 'deskripsi'),
+                '[laporan.tindakan]' => $data->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
+                '[laporan.link]' => asset('storage/' . $data->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran')),
+                '[laporan.url]' => $data->url,
+                '[laporan.nomor]' => $data->nomor_surat,
+
             ];
         } else {
             return [];
@@ -82,7 +145,7 @@ class LaporanMasyarakat extends Model
 
     public function reformatStringWithTag($string, $id = null): string
     {
-        $strArray = explode(" ", $string);
+        $strArray = explode("*", $string);
         $results = [];
 
         if ($id) {
@@ -112,17 +175,26 @@ class LaporanMasyarakat extends Model
         return $this->hasMany(WhatsappLaporan::class);
     }
 
-    public function autorisasi(TipeAutorisasi $tipe): bool
+    public function autorisasi(TipeAutorisasi|string $tipe): bool
     {
         $check = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
 
         return $check ? true : false;
     }
 
-    public function getAutorisasiString(TipeAutorisasi $tipe, $key = 'id'): string
+    public function getAutorisasiString(TipeAutorisasi|string $tipe, $key = 'id'): string
     {
         $check = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
 
         return $check ? $check->{$key} : '-';
+    }
+
+    public function getAutorisasiLaporan($tipe) {
+        $data = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
+        
+        if($data)
+            return $data->reports;
+
+        return [];
     }
 }

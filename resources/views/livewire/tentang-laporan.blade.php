@@ -1,4 +1,6 @@
 <x-layouts.base>
+    <x-layouts.hero />
+
     <section id="content" class="flex flex-row justify-center">
         <div class="form-container w-4xl shadow-md -mt-50 z-10 bg-white p-10">
 

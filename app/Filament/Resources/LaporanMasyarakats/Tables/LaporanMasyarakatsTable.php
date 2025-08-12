@@ -6,6 +6,7 @@ use App\DummyLaporanGenerator;
 use App\Enum\KlasifikasiLaporan;
 use App\Enum\TipeAutorisasi;
 use App\GenerateTiket;
+use App\GenerateWhatsappTemplate;
 use App\Modules\Whapify;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
@@ -87,6 +88,29 @@ class LaporanMasyarakatsTable
                             Notification::make()
                                 ->title('Tiket telah berhasil digenerasi.')
                                 ->success()
+                                ->send();
+                        }
+                    ),
+                Action::make('generate_template')
+                    ->requiresConfirmation()
+                    ->icon('tabler-brand-whatsapp')
+                    ->color(Color::Green)
+                    ->action(
+                        function (): void {
+                            GenerateWhatsappTemplate::generate();
+
+                            Notification::make()
+                                ->title('Whatsapp telah berhasil digenerasi. mohon update isi pesan pada menu whatsapp template agar dapat ditampilkan pada saat mengirim pesan')
+                                ->success()
+                                ->actions([
+                                    Action::make('perbarui')
+                                        ->icon('tabler-arrow-right')
+                                        ->label('Perbarui Isi Pesan')
+                                        ->url(url('admin/whatsapp-templates'))
+                                        ->button()
+                                        ->color(Color::Gray)
+                                ])
+                                ->sendToDatabase(Auth::user())
                                 ->send();
                         }
                     ),

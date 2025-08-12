@@ -16,6 +16,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\LaporanMasyarakats\LaporanMasyarakatResource;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\Storage;
 
 class ViewLaporanMasyarakat extends ViewRecord
@@ -49,7 +50,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                 EditAction::make()
                     ->icon('tabler-edit'),
                 Action::make('print')
-                    ->hidden(fn ($livewire) : bool => $livewire->record->autorisasi(TipeAutorisasi::PROSES))
+                    ->hidden(fn($livewire): bool => $livewire->record->autorisasi(TipeAutorisasi::PROSES))
                     ->requiresConfirmation()
                     ->icon('tabler-printer')
                     ->action(
@@ -67,11 +68,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                             $record->status = TipeAutorisasi::PROSES;
                             $record->save();
 
-                            // $pdf = Pdf::loadView('print.test', [
-                            //     "data" => $livewire->record
-                            // ])->save($livewire->record->tiket . '.pdf', 'public');
-
-                            $pdf = Pdf::loadView('print.to', [
+                            $pdf = Pdf::loadView('print.test', [
                                 "data" => $livewire->record
                             ])->save($livewire->record->tiket . '.pdf', 'public');
 
@@ -89,6 +86,40 @@ class ViewLaporanMasyarakat extends ViewRecord
                                 ->success()
                                 ->sendToDatabase(superAdmin())
                                 ->send();
+
+                            autoSendWhatsapp($record->id, 'proses');
+
+                            return Storage::disk('public')->download($path);
+                        }
+                    ),
+                Action::make('print_tanggapan')
+                    ->label('Print Tanggapan')
+                    ->visible(fn($livewire): bool => $livewire->record->autorisasi(TipeAutorisasi::SELESAI))
+                    ->requiresConfirmation()
+                    ->icon('tabler-printer')
+                    ->color(Color::Blue)
+                    ->action(
+                        function ($record, $livewire) {
+                            $pdf = Pdf::loadView('print.tanggapan', [
+                                "data" => $livewire->record
+                            ])->save($livewire->record->tiket . '_tanggapan.pdf', 'public');
+
+                            $path = $livewire->record->tiket . '_tanggapan.pdf';
+
+                            Notification::make()
+                                ->title('Print tanggapan telah selesai.')
+                                ->actions([
+                                    Action::make('lihat')
+                                        ->url(asset('storage/' . $record->tiket . '_tanggapan.pdf'))
+                                        ->openUrlInNewTab()
+                                        ->button()
+                                        ->markAsUnread(),
+                                ])
+                                ->success()
+                                ->sendToDatabase(superAdmin())
+                                ->send();
+
+                            autoSendWhatsapp($record->id, 'proses');
 
                             return Storage::disk('public')->download($path);
                         }
@@ -127,6 +158,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->sendToDatabase(superAdmin())
                                     ->send()
                                 ;
+
+                                autoSendWhatsapp($record->id, 'verifikasi');
                             }
                         ),
                     Action::make('tindak_lanjut_laporan')
@@ -143,6 +176,15 @@ class ViewLaporanMasyarakat extends ViewRecord
                                 ->disk('public')
 
                         ])
+                        ->hidden(function ($livewire): bool {
+                            $record = $livewire->record;
+
+                            if ($record->autorisasi(TipeAutorisasi::VERIFIKASI)) {
+                                return false;
+                            }
+
+                            return true;
+                        })
                         ->action(
                             function ($data, $record): void {
                                 $user = Auth::user();
@@ -169,6 +211,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->success()
                                     ->sendToDatabase(superAdmin())
                                     ->send();
+
+                                autoSendWhatsapp($record->id, 'tindak_lanjut');
                             }
                         ),
                     Action::make('batal_laporan')
@@ -206,6 +250,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->success()
                                     ->sendToDatabase(superAdmin())
                                     ->send();
+
+                                autoSendWhatsapp($record->id, 'batal');
                             }
                         ),
                     Action::make('selesai_laporan')
@@ -214,14 +260,25 @@ class ViewLaporanMasyarakat extends ViewRecord
                         ->authorize('selesai_laporan::masyarakats::laporan::masyarakat')
                         ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::SELESAI))
                         ->schema([
-                            MarkdownEditor::make('deskripsi')
+                            TextInput::make('url')
+                                ->prefixIcon('tabler-link')
                                 ->required(),
-                            FileUpload::make('lampiran')
-                                ->visibility('public')
-                                ->directory('autoritas_lampiran')
-                                ->disk('public')
+                            TextInput::make('nomor_surat')
+                                ->prefixIcon('tabler-number')
+                                ->required(),
+                            MarkdownEditor::make('deskripsi')
+                                ->nullable(),
 
                         ])
+                        ->hidden(function ($livewire): bool {
+                            $record = $livewire->record;
+
+                            if ($record->autorisasi(TipeAutorisasi::TINDAK_LANJUT)) {
+                                return false;
+                            }
+
+                            return true;
+                        })
                         ->action(
                             function ($data, $record): void {
                                 $user = Auth::user();
@@ -231,7 +288,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     'tipe_autorisasi' => TipeAutorisasi::SELESAI,
                                     'tanggal_autorisasi' => Carbon::now(),
                                     'deskripsi' => $data['deskripsi'],
-                                    'lampiran' => $data['lampiran'],
+                                    'url' => $data['url'],
+                                    'nomor_surat' => $data['nomor_surat'],
                                 ]);
 
                                 $record->status = TipeAutorisasi::SELESAI;
@@ -248,11 +306,13 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->success()
                                     ->sendToDatabase(superAdmin())
                                     ->send();
+
+                                autoSendWhatsapp($record->id, 'selesai');
                             }
                         ),
                 ])
-                ->visible(fn ($livewire) : bool => $livewire->record->autorisasi(TipeAutorisasi::PROSES))
-                ->dropdown(false)
+                    ->visible(fn($livewire): bool => $livewire->record->autorisasi(TipeAutorisasi::PROSES))
+                    ->dropdown(false)
             ])
                 ->button()
                 ->hidden(function ($livewire): bool {

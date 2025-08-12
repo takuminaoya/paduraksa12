@@ -75,15 +75,34 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                             TextInput::make('lokasi_kejadian')
                                 ->required()
                                 ->columnSpanFull(),
+                            Select::make('klasifikasi')
+                                ->required()
+                                ->columnSpanFull()
+                                ->live()
+                                ->options(KlasifikasiLaporan::class),
                             Select::make('banjar_kejadian')
+                                ->visible(
+                                    function ($get): bool {
+
+                                        $klasifikasi = $get('klasifikasi');
+
+                                        switch ($klasifikasi) {
+                                            case KlasifikasiLaporan::PERMOHONAN_DATA:
+                                                return false;
+                                                break;
+
+                                            case KlasifikasiLaporan::PENGADUAN_LAYANAN:
+                                                return false;
+                                                break;
+                                        }
+
+                                        return true;
+                                    }
+                                )
                                 ->prefix('Br. ')
                                 ->required()
                                 ->columnSpanFull()
                                 ->options(BanjarEnum::class),
-                            Select::make('klasifikasi')
-                                ->required()
-                                ->columnSpanFull()
-                                ->options(KlasifikasiLaporan::class),
                             // Toggle::make('anonim'),
                             Toggle::make('rahasia'),
                             FileUpload::make('lampiran')
@@ -117,7 +136,6 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                                             $set('tanggal_lahir', $data->tanggal_lahir);
                                             $set('jenis_kelamin', $kelamin);
                                             $set('pekerjaan', $pekerjaan->job_name);
-
                                         }
                                     }
                                 )
@@ -171,39 +189,7 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
         $lap->save();
 
         // kirim whatsapp
-        $template = ApplicationSetting::getSettingValueByKey('wa-registrasi');
-        $templateIsi = WhatsappTemplate::find($template);
-        $reformatedIsi = $lap->reformatStringWithTag($templateIsi->isi, $lap->id);
-
-        $message = Whapify::sendSingleChat('62' . $lap->no_telpon, $reformatedIsi);
-
-        if ($message) {
-            $detail = Whapify::getSingleChat($message['messageId']);
-
-            WhatsappLaporan::create([
-                'laporan_masyarakat_id' => $lap->id,
-                'whatsapp_id' => $message['messageId'],
-                'receipent' => $detail['recipient'],
-                'isi_pesan' => $detail['message'],
-                'dikirim_pada' => Carbon::createFromTimestamp($detail['created'])->toDateTimeString(),
-
-            ]);
-
-            $notif_route = url('admin/laporan-masyarakats/' . $lap->id);
-
-            Notification::make()
-                ->title('Whatsapp dengan penerima ' . $lap->nama . ' telam masuk queue.')
-                ->actions([
-                    Action::make('lihat_laporan')
-                        ->icon('tabler-eye')
-                        ->url($notif_route)
-                        ->button()
-                        ->markAsUnread(),
-                ])
-                ->success()
-                ->sendToDatabase(superAdmin())
-                ->send();
-        }
+        autoSendWhatsapp($lap->id, 'aktif');
 
         $this->redirect('/notif/sukses/' . $lap->uuid, navigate: true);
     }

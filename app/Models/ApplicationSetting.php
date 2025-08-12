@@ -9,6 +9,6 @@ class ApplicationSetting extends Model
     protected $guarded = ["id"];
 
     public static function getSettingValueByKey(string $key) {
-        return ApplicationSetting::where('key', $key)->first()->value('value');
+        return ApplicationSetting::where('key', $key)->value('value');
     }
 }

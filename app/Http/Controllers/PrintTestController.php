@@ -15,9 +15,9 @@ class PrintTestController extends Controller
         Carbon::setLocale('IND');
         App::setLocale('IND');
 
-        $data = LaporanMasyarakat::find(54);
+        $data = LaporanMasyarakat::find(60);
 
-        $pdf = Pdf::loadView('print.test', [
+        $pdf = Pdf::loadView('print.tanggapan', [
             'data' => $data
         ]);
         return $pdf->stream();

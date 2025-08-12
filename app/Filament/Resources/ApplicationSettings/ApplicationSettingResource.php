@@ -53,7 +53,8 @@ class ApplicationSettingResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('nama'),
-                TextColumn::make('deskripsi'),
+                TextColumn::make('deskripsi')
+                    ->wrap(),
                 TextColumn::make('key'),
                 TextColumn::make('value'),
             ])

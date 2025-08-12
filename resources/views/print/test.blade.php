@@ -217,7 +217,11 @@
         </div>
 
         <div class="content">
-            <img class="lampiran" src="{{ public_path('storage/' . $data->lampiran) }}" alt="">
+            @if ($data->lampiran)
+                <img class="lampiran" src="{{ public_path('storage/' . $data->lampiran) }}" alt="">
+            @else
+                <h5 style="text-align: center; font-weight:bold; text-transform:uppercase;">Tidak Ada Lampiran</h5>
+            @endif
         </div>
     </section>
 
