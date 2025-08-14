@@ -37,7 +37,7 @@ class ListLaporanMasyarakats extends ListRecords
             'semua' => Tab::make('Semua')
                 ->icon('tabler-checks'),
             'proses' => Tab::make('Diproses')
-                ->icon('tabler-check')
+                ->icon('tabler-arrows-exchange')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::PROSES)->count()
                 )
@@ -62,7 +62,7 @@ class ListLaporanMasyarakats extends ListRecords
                 )
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', TipeAutorisasi::BATAL)),
             'selesai' => Tab::make('Diselesaikan')
-                ->icon('tabler-diaper')
+                ->icon('tabler-circle-dashed-check')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::SELESAI)->count()
                 )

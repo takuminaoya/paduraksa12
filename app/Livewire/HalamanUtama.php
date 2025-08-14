@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Filament\Schemas\Schema;
 use App\Enum\KlasifikasiLaporan;
+use App\Enum\TipeAutorisasi;
 use App\Models\LaporanMasyarakat;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Contracts\HasSchemas;
@@ -31,9 +32,18 @@ class HalamanUtama extends Component implements HasSchemas
             ];
         }
 
+        $stats = [];
+        foreach (TipeAutorisasi::cases() as $c) {
+            $stats[] = [
+                "name" => $c->name,
+                "total" => LaporanMasyarakat::where('status', $c->name)->count()
+            ];
+        }
+
         $this->laporans = [
             "total" => LaporanMasyarakat::all()->count(),
-            "klass" => $cases
+            "klass" => $cases,
+            "stats" => $stats
         ];
     }
 

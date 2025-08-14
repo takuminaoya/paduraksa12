@@ -70,7 +70,6 @@ class PublikAkses extends Component implements HasActions, HasSchemas, HasTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
-            ->persistSortInSession()
             ->filters([
                 SelectFilter::make('status')
                     ->options(TipeAutorisasi::class),

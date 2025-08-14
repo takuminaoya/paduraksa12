@@ -1,9 +1,10 @@
 <x-layouts.base>
-    <x-layouts.hero size="h-screen"> 
+    <x-layouts.hero size="h-screen">
         <form wire:submit="check" method="post" class="w-full lg:px-52 h-fit px-5">
             <div class="lg:flex lg:flex-row shadow-md">
-                <input type="text" required class="p-3 w-full text-black bg-white placeholder:text-gray-400" wire:model="tiket"
-                    name="tiket" value="{{ old('tiket') }}" placeholder="contoh : KTK-0507253-UNGASAN">
+                <input type="text" required class="p-3 w-full text-black bg-white placeholder:text-gray-400"
+                    wire:model="tiket" name="tiket" value="{{ old('tiket') }}"
+                    placeholder="contoh : KTK-0507253-UNGASAN">
                 <button type="submit"
                     class="p-3 flex flex-row lg:w-fit w-full justify-center gap-1 bg-red-500 text-white hover:bg-red-400">
                     <x-tabler-search />
@@ -24,122 +25,162 @@
 
             <div class="w-full lg:mt-16 mt-5 text-center  text-white">
                 <h5 class="font-bold lg:text-3xl">Jumlah Yang Terdaftar Pada Sistem</h5>
-                <h1 class="font-bold lg:text-5xl text-3xl mt-5">{{ $laporans['total'] }} Laporan</h1>
+                <h1 class="font-bold lg:text-5xl text-3xl lg:mt-10 mt-5">{{ $laporans['total'] }} Laporan</h1>
 
-                <div class="btn lg:col-span-5 flex flex-row justify-center items-center lg:mt-10 mt-5">
-                    <a href="/publik" wire:navigate
-                        class="border-2 rounded shadow-md lg:px-5 lg:py-3 px-3 py-2 font-bold border-white text-white hover:bg-white hover:text-red-300">LIHAT
-                        SEMUA LAPORAN</a>
+                <div class="cont grid lg:grid-cols-6 grid-cols-4 gap-5 lg:mt-10 mt-5">
+                    @foreach ($laporans['stats'] as $item)
+                        @php
+                            $name = '';
+                            $reformat = '';
+
+                            switch ($item['name']) {
+                                case 'AKTIF':
+                                    $reformat = 'Baru Daftar';
+                                    break;
+                                case 'PROSES':
+                                    $reformat = 'Diproses';
+                                    break;
+
+                                case 'VERIFIKASI':
+                                    $reformat = 'Diverifikasi';
+                                    break;
+
+                                case 'TINDAK_LANJUT':
+                                    $reformat = 'Ditindak Lanjuti';
+                                    break;
+
+                                case 'BATAL':
+                                    $reformat = 'Dibatalkan';
+                                    break;
+
+                                case 'SELESAI':
+                                    $reformat = 'Diselesaikan';
+                                    break;
+                            }
+
+                            $name = $reformat;
+                        @endphp
+
+                        <div class="fitur lg:w-50 flex flex-col items-center">
+                            <div class="desc mt-2">
+                                <h5 class="text-center lg:text-5xl text-3xl font-bold mb-5">{{ $item['total'] }}</h5>
+                                <p class="text-center lg:text-lg text-white capitalize">{{ $name }}</p>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-    </form>
+        </form>
     </x-layouts.hero>
 
 
 
     <section id="content" class="flex flex-row justify-center h-10 mb-2">
-        
-</section>
 
-@if ($laporan)
-    <section id="content" class="flex flex-row justify-center">
-        <div class="form-container w-4xl shadow-md -mt-44 z-10 bg-white p-5">
-            {{ $this->laporanInfolist }}
+    </section>
+
+    @if ($laporan)
+        <section id="content" class="flex flex-row justify-center">
+            <div class="form-container w-4xl shadow-md -mt-44 z-10 bg-white p-5">
+                {{ $this->laporanInfolist }}
+            </div>
+        </section>
+    @endif
+
+
+    <section id="progress" class="flex flex-row justify-center">
+        <div class="progress-grp relative p-20">
+            <div class="cont grid lg:grid-cols-5 gap-5 relative">
+
+                <div class="btn lg:col-span-5 flex flex-row justify-center items-center mb-5">
+                    <h5 class="text-2xl text-center font-bold text-gray-400 text-shadow-2xs">JUMLAH PER KLASIFIKASI</h5>
+                </div>
+
+                @foreach ($laporans['klass'] as $item)
+                    @php
+                        $name = '';
+
+                        if ($item['name'] != 'POSYANKUMHAMDES') {
+                            $name = str_replace('_', ' ', strtolower($item['name']));
+                        } else {
+                            $name = $item['name'];
+                        }
+                    @endphp
+
+                    <div class="fitur lg:w-50 flex flex-col items-center">
+                        <div class="desc mt-2">
+                            <h5 class="text-center text-5xl font-bold mb-5">{{ $item['total'] }}</h5>
+                            <p class="text-center text-lg text-gray-400 capitalize">{{ $name }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </section>
-@endif
 
-
-<section id="progress" class="flex flex-row justify-center">
-    <div class="progress-grp relative p-20">
-        <div class="cont grid lg:grid-cols-5 gap-5 relative">
-
-            <div class="btn lg:col-span-5 flex flex-row justify-center items-center mb-5">
-                <h5 class="text-2xl text-center font-bold text-gray-400 text-shadow-2xs">JUMLAH PER KLASIFIKASI</h5>
-            </div>
-
-            @foreach ($laporans['klass'] as $item)
-                @php
-                    $name = '';
-
-                    if ($item['name'] != 'POSYANKUMHAMDES') {
-                        $name = str_replace('_', ' ', strtolower($item['name']));
-                    } else {
-                        $name = $item['name'];
-                    }
-                @endphp
-
-                <div class="fitur lg:w-50 flex flex-col items-center">
+    <section id="progress" class="flex flex-row justify-center">
+        <div class="progress-grp relative p-20">
+            <div class="cont grid lg:grid-cols-5 gap-5 relative">
+                <h5 class="font-bold lg:text-2xl text-center text-gray-400 mb-5 col-span-5">PROSES PENGAJUAN LAPORAN
+                </h5>
+                <div class="fitur w-50 flex flex-col items-center">
+                    <div
+                        class="logo flex flex-row justify-center items-center w-20 h-20 bg-red-700 text-white rounded-full">
+                        <x-tabler-edit />
+                    </div>
                     <div class="desc mt-2">
-                        <h5 class="text-center text-5xl font-bold mb-5">{{ $item['total'] }}</h5>
-                        <p class="text-center text-lg text-gray-400 capitalize">{{ $name }}</p>
+                        <h5 class="text-center font-bold">Tautan Dilaporkan</h5>
+                        <p class="text-center">Laporkan keluhan atau aspirasi anda dengan jelas dan lengkap</p>
                     </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
-</section>
+                <div class="fitur w-50 flex flex-col items-center">
+                    <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
+                        <x-tabler-checklist />
+                    </div>
+                    <div class="desc mt-2">
+                        <h5 class="text-center font-bold">Proses Verifikasi</h5>
+                        <p class="text-center">Dalam 3 hari kerja, laporan Anda akan diverifikasi dan diteruskan
+                            kepada Pemerintah Desa</p>
+                    </div>
+                </div>
+                <div class="fitur w-50 flex flex-col items-center">
+                    <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
+                        <x-tabler-trekking />
+                    </div>
+                    <div class="desc mt-2">
+                        <h5 class="text-center font-bold">Proses Tindak Lanjut</h5>
+                        <p class="text-center">Dalam 5 hari kerja, Pemerintah Desa akan menindaklanjuti dan
+                            membalas laporan Anda</p>
+                    </div>
+                </div>
+                <div class="fitur w-50 flex flex-col items-center">
+                    <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
+                        <x-tabler-bubble-text />
+                    </div>
+                    <div class="desc mt-2">
+                        <h5 class="text-center font-bold">Beri Tanggapan</h5>
+                        <p class="text-center">Anda dapat menanggapi kembali balasan yang diberikan oleh Pemerintah Desa
+                            dalam waktu 10 hari</p>
+                    </div>
+                </div>
+                <div class="fitur w-50 flex flex-col items-center">
+                    <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
+                        <x-tabler-checks />
+                    </div>
+                    <div class="desc mt-2">
+                        <h5 class="text-center font-bold">Selesai</h5>
+                        <p class="text-center">Laporan Anda akan terus ditindaklanjuti hingga terselesaikan</p>
+                    </div>
+                </div>
 
-<section id="progress" class="flex flex-row justify-center">
-    <div class="progress-grp relative p-20">
-        <div class="cont grid lg:grid-cols-5 gap-5 relative">
-            <div class="fitur w-50 flex flex-col items-center">
-                <div
-                    class="logo flex flex-row justify-center items-center w-20 h-20 bg-red-700 text-white rounded-full">
-                    <x-tabler-edit />
+                <div class="btn lg:col-span-5 flex flex-row justify-center items-center mt-5">
+                    <a href="/tentang" wire:navigate
+                        class="border-2 rounded px-5 py-3 font-bold border-red-700 text-red-700 hover:bg-red-700 hover:text-white">PELAJARI
+                        LEBIH LANJUT</a>
                 </div>
-                <div class="desc mt-2">
-                    <h5 class="text-center font-bold">Tautan Dilaporkan</h5>
-                    <p class="text-center">Laporkan keluhan atau aspirasi anda dengan jelas dan lengkap</p>
-                </div>
-            </div>
-            <div class="fitur w-50 flex flex-col items-center">
-                <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
-                    <x-tabler-checklist />
-                </div>
-                <div class="desc mt-2">
-                    <h5 class="text-center font-bold">Proses Verifikasi</h5>
-                    <p class="text-center">Dalam 3 hari, laporan Anda akan diverifikasi dan diteruskan kepada
-                        instansi berwenang</p>
-                </div>
-            </div>
-            <div class="fitur w-50 flex flex-col items-center">
-                <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
-                    <x-tabler-trekking />
-                </div>
-                <div class="desc mt-2">
-                    <h5 class="text-center font-bold">Proses Tindak Lanjut</h5>
-                    <p class="text-center">Dalam 5 hari, instansi akan menindaklanjuti dan membalas laporan Anda</p>
-                </div>
-            </div>
-            <div class="fitur w-50 flex flex-col items-center">
-                <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
-                    <x-tabler-bubble-text />
-                </div>
-                <div class="desc mt-2">
-                    <h5 class="text-center font-bold">Beri Tanggapan</h5>
-                    <p class="text-center">Anda dapat menanggapi kembali balasan yang diberikan oleh instansi dalam
-                        waktu 10 hari</p>
-                </div>
-            </div>
-            <div class="fitur w-50 flex flex-col items-center">
-                <div class="logo flex flex-row justify-center items-center w-20 h-20 shadow-md rounded-full">
-                    <x-tabler-checks />
-                </div>
-                <div class="desc mt-2">
-                    <h5 class="text-center font-bold">Selesai</h5>
-                    <p class="text-center">Laporan Anda akan terus ditindaklanjuti hingga terselesaikan</p>
-                </div>
-            </div>
-
-            <div class="btn lg:col-span-5 flex flex-row justify-center items-center mt-5">
-                <a href="/tentang" wire:navigate
-                    class="border-2 rounded px-5 py-3 font-bold border-red-700 text-red-700 hover:bg-red-700 hover:text-white">PELAJARI
-                    LEBIH LANJUT</a>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 </x-layouts.base>

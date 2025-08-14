@@ -15,6 +15,7 @@ use App\Filament\Resources\LaporanMasyarakats\Pages\ViewLaporanMasyarakat;
 use App\Filament\Resources\LaporanMasyarakats\Pages\ListLaporanMasyarakats;
 use App\Filament\Resources\LaporanMasyarakats\Pages\CreateLaporanMasyarakat;
 use App\Filament\Resources\LaporanMasyarakats\RelationManagers\AutorisasisRelationManager;
+use App\Filament\Resources\LaporanMasyarakats\RelationManagers\TanggapansRelationManager;
 use App\Filament\Resources\LaporanMasyarakats\RelationManagers\WhatsappsRelationManager;
 use App\Filament\Resources\LaporanMasyarakats\Schemas\LaporanMasyarakatForm;
 use App\Filament\Resources\LaporanMasyarakats\Tables\LaporanMasyarakatsTable;
@@ -46,7 +47,8 @@ class LaporanMasyarakatResource extends Resource implements HasShieldPermissions
     {
         return [
             AutorisasisRelationManager::class,
-            WhatsappsRelationManager::class
+            WhatsappsRelationManager::class,
+            // TanggapansRelationManager::class
         ];
     }
 

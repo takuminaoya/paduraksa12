@@ -1,6 +1,6 @@
 <x-layouts.base>
     <x-layouts.hero />
-    
+
     <section id="content" class="flex flex-row justify-center">
         <div class="form-container w-4xl shadow-md -mt-44 z-10 bg-white p-5">
             @livewire('create-laporan')
@@ -10,6 +10,7 @@
     <section id="progress" class="flex flex-row justify-center">
         <div class="progress-grp relative p-20">
             <div class="cont grid lg:grid-cols-5 gap-5 relative">
+                <h5 class="font-bold lg:text-2xl text-center text-gray-400 mb-5 col-span-5">PROSES PENGAJUAN LAPORAN</h5>
                 <div class="fitur w-50 flex flex-col items-center">
                     <div
                         class="logo flex flex-row justify-center items-center w-20 h-20 bg-red-700 text-white rounded-full">
@@ -67,5 +68,5 @@
             </div>
         </div>
     </section>
-    
+
 </x-layouts.base>

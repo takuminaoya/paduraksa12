@@ -45,13 +45,14 @@ class LaporanMasyarakat extends Model
         ],
     ];
 
-    public $prefix = '500.2';
-    public $suffix = 'UNGASAN';
+    public $prefix = '700.1.2.4';
+    public $suffix = 'Desa_Ungasan';
     public $separator = "/";
 
-    public function nomorSurat(): string {
-        
-        if($this->autorisasi(TipeAutorisasi::SELESAI)){
+    public function nomorSurat(): string
+    {
+
+        if ($this->autorisasi(TipeAutorisasi::SELESAI)) {
             $aut = $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'nomor_surat');
 
             $raws = [
@@ -108,7 +109,7 @@ class LaporanMasyarakat extends Model
             '[laporan.tindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
             '[laporan.link]' => asset('storage/' . $this->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran')),
             '[laporan.url]' => $this->url,
-            '[laporan.nomor]' => $this->nomor_surat,
+            '[laporan.nomor]' => $this->nomorSurat(),
 
         ];
     }
@@ -135,7 +136,7 @@ class LaporanMasyarakat extends Model
                 '[laporan.tindakan]' => $data->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
                 '[laporan.link]' => asset('storage/' . $data->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran')),
                 '[laporan.url]' => $data->url,
-                '[laporan.nomor]' => $data->nomor_surat,
+                '[laporan.nomor]' => $this->nomorSurat(),
 
             ];
         } else {
@@ -175,6 +176,11 @@ class LaporanMasyarakat extends Model
         return $this->hasMany(WhatsappLaporan::class);
     }
 
+    public function tanggapans(): HasMany
+    {
+        return $this->hasMany(LaporanTanggapan::class);
+    }
+
     public function autorisasi(TipeAutorisasi|string $tipe): bool
     {
         $check = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
@@ -189,10 +195,11 @@ class LaporanMasyarakat extends Model
         return $check ? $check->{$key} : '-';
     }
 
-    public function getAutorisasiLaporan($tipe) {
+    public function getAutorisasiLaporan($tipe)
+    {
         $data = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
-        
-        if($data)
+
+        if ($data)
             return $data->reports;
 
         return [];

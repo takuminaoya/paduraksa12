@@ -126,7 +126,7 @@
 
         <div class="content" style="width:100%;">
             <p class="tanggal">
-                Nomor: {{ $data->tiket }} <br>
+                Nomor: {{ $data->nomorSurat() }} <br>
                 Lampiran: – <br>
                 Perihal: Tanggapan atas Laporan Masyarakat <br>
             </p>

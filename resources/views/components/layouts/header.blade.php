@@ -20,6 +20,7 @@
             <li><a href="/" wire:navigate class="hover:border-b-2 pb-1 font-s">Home</a></li>
             <li><a href="/tentang" wire:navigate class="hover:border-b-2 pb-1 font-s">Tentang</a></li>
             <li><a href="/petunjuk" wire:navigate class="hover:border-b-2 pb-1 font-s">Petunjuk Penggunaan</a></li>
+            <li><a href="/publik" wire:navigate class="hover:border-b-2 pb-1 font-s">Daftar Laporan</a></li>
         </ul>
     </nav>
 </header>
