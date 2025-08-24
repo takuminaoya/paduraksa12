@@ -16,4 +16,5 @@ Route::get('/petunjuk', PetujukLaporan::class)->name('petunjuk');
 Route::get('/publik', PublikAkses::class)->name('publik');
 Route::get('/daftar', HalamanLaporan::class)->name('daftar');
 
-Route::get('print/preview', [PrintTestController::class, 'preview']);
+Route::get('print/preview/{id}', [PrintTestController::class, 'preview']);
+Route::get('tanggapan/preview/{id}', [PrintTestController::class, 'tanggapan']);

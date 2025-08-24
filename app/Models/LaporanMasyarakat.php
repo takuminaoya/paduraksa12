@@ -14,8 +14,11 @@ class LaporanMasyarakat extends Model
         'anonim' => 'boolean',
         'rahasia' => 'boolean',
         'penyandang_disabilitas' => 'boolean',
+        'lampiran' => 'array'
 
     ];
+
+    // asset('storage/' . $data->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran'))
 
     public $auto_whatsapp = true;
     public $whatsapp_templates = [
@@ -52,8 +55,8 @@ class LaporanMasyarakat extends Model
     public function nomorSurat(): string
     {
 
-        if ($this->autorisasi(TipeAutorisasi::SELESAI)) {
-            $aut = $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'nomor_surat');
+        if ($this->autorisasi(TipeAutorisasi::TINDAK_LANJUT)) {
+            $aut = $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'nomor_surat');
 
             $raws = [
                 $this->prefix,
@@ -107,7 +110,7 @@ class LaporanMasyarakat extends Model
             '[laporan.created_at]' => $this->created_at,
             '[laporan.alasan]' => $this->getAutorisasiString(TipeAutorisasi::BATAL, 'deskripsi'),
             '[laporan.tindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
-            '[laporan.link]' => asset('storage/' . $this->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran')),
+            '[laporan.link]' => '-',
             '[laporan.url]' => $this->url,
             '[laporan.nomor]' => $this->nomorSurat(),
 
@@ -134,7 +137,7 @@ class LaporanMasyarakat extends Model
                 '[laporan.created_at]' => $data->created_at,
                 '[laporan.alasan]' => $data->getAutorisasiString(TipeAutorisasi::BATAL, 'deskripsi'),
                 '[laporan.tindakan]' => $data->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
-                '[laporan.link]' => asset('storage/' . $data->getAutorisasiString(TipeAutorisasi::PROSES, 'lampiran')),
+                '[laporan.link]' => '-',
                 '[laporan.url]' => $data->url,
                 '[laporan.nomor]' => $this->nomorSurat(),
 
@@ -181,6 +184,13 @@ class LaporanMasyarakat extends Model
         return $this->hasMany(LaporanTanggapan::class);
     }
 
+    public function oautorisasi(TipeAutorisasi|string $tipe)
+    {
+        $check = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
+
+        return $check;
+    }
+
     public function autorisasi(TipeAutorisasi|string $tipe): bool
     {
         $check = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
@@ -192,7 +202,11 @@ class LaporanMasyarakat extends Model
     {
         $check = LaporanAutorisasi::where('tipe_autorisasi', $tipe)->where('laporan_masyarakat_id', $this->id)->first();
 
-        return $check ? $check->{$key} : '-';
+        if ($check) {
+            return $check->{$key} ? $check->{$key} : '-';
+        } else {
+            return '-';
+        }
     }
 
     public function getAutorisasiLaporan($tipe)

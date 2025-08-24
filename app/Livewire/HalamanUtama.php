@@ -74,8 +74,7 @@ class HalamanUtama extends Component implements HasSchemas
                     ->schema([
                         TextEntry::make('tiket')
                             ->copyable()
-                            ->icon('tabler-copy')
-                            ->label('UUID'),
+                            ->icon('tabler-copy'),
                         TextEntry::make('klasifikasi'),
                         TextEntry::make('judul'),
                         TextEntry::make('isi')
@@ -84,13 +83,30 @@ class HalamanUtama extends Component implements HasSchemas
                         TextEntry::make('tanggal_kejadian')
                             ->date(),
                         TextEntry::make('lokasi_kejadian'),
-                        TextEntry::make('banjar_kejadian'),
-                        TextEntry::make('anonim')
-                            ->badge()
-                            ->formatStateUsing(fn($record): string => $record->anonim ? 'Dirahasiakan' : 'Publik'),
-                        TextEntry::make('rahasia')
-                            ->badge()
-                            ->formatStateUsing(fn($record): string => $record->rahasia ? 'Dirahasiakan' : 'Publik'),
+                        TextEntry::make('banjar_kejadian')
+                            ->visible(
+                                function ($record): bool {
+                                    switch ($record->klasifikasi) {
+                                        case "PERMOHONAN_DATA":
+                                            return false;
+                                            break;
+
+                                        case "PENGADUAN_LAYANAN":
+                                            return false;
+                                            break;
+
+                                        case "KRITIK_DAN_SARAN":
+                                            return false;
+                                            break;
+
+                                        case "KONSULTASI_HUKUM":
+                                            return false;
+                                            break;
+                                    }
+
+                                    return true;
+                                }
+                            ),
                         TextEntry::make('status')
                             ->badge(),
                         ImageEntry::make('lampiran')
@@ -113,12 +129,8 @@ class HalamanUtama extends Component implements HasSchemas
                         TextEntry::make('no_telpon')
                             ->limit(5, '***********'),
                         TextEntry::make('pekerjaan'),
-                        TextEntry::make('penyandang_disabilitas')
-                            ->badge()
-                            ->formatStateUsing(fn($record): string => $record->penyandang_disabilitas ? 'Iya' : 'Tidak'),
                         TextEntry::make('created_at')
-                            ->dateTime(),
-                        TextEntry::make('updated_at')
+                            ->label('Dibuat pada')
                             ->dateTime(),
                     ])
             ]);

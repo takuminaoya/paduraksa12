@@ -129,7 +129,56 @@ class WhatsappsRelationManager extends RelationManager
                         }
                     )
             ])
-            ->recordActions([])
+            ->recordActions([
+                Action::make('kirim')
+                    ->visible(fn($record): string => ($record->status() == 'sent') ? false : true)
+                    ->button()
+                    ->icon('tabler-brand-whatsapp')
+                    ->requiresConfirmation()
+                    ->action(
+                        function ($record, $livewire) {
+                            // template pesan
+                            if ($record->whatsapp_template_id == null)
+                                return;
+                            
+
+                            $recordMaster = $livewire->ownerRecord;
+
+                            $wt = WhatsappTemplate::find($record->whatsapp_template_id);
+
+                            $reformatedIsi = $recordMaster->reformatStringWithTag($wt->isi);
+
+                            $message = Whapify::sendSingleChat('62' . $recordMaster->no_telpon, $reformatedIsi);
+                            if ($message) {
+                                $detail = Whapify::getSingleChat($message['messageId']);
+                                WhatsappLaporan::create([
+                                    'laporan_masyarakat_id' => $recordMaster->id,
+                                    'whatsapp_id' => $message['messageId'],
+                                    'receipent' => $detail['recipient'],
+                                    'isi_pesan' => $detail['message'],
+                                    'whtasapp_template_id' => $record->whatsapp_template_id,
+                                    'dikirim_pada' => Carbon::createFromTimestamp($detail['created'])->toDateTimeString(),
+
+                                ]);
+
+                                $notif_route = url('admin/laporan-masyarakats/' . $recordMaster->id);
+
+                                Notification::make()
+                                    ->title('Whatsapp dengan penerima ' . $recordMaster->no_telpon . ' telam masuk queue.')
+                                    ->actions([
+                                        Action::make('lihat_laporan')
+                                            ->icon('tabler-eye')
+                                            ->url($notif_route)
+                                            ->button()
+                                            ->markAsUnread(),
+                                    ])
+                                    ->success()
+                                    ->sendToDatabase(superAdmin())
+                                    ->send();
+                            }
+                        }
+                    )
+            ])
             ->toolbarActions([]);
     }
 

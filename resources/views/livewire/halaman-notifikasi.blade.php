@@ -4,7 +4,8 @@
     <section id="content" class="flex flex-row justify-center">
         <div class="form-container w-4xl shadow-md -mt-50 z-10 bg-white p-10">
 
-            <h5 class="mb-10 text-center text-2xl font-bold">Selamat Laporan anda telah berhasil di laporkan.</h5>
+            <h5 class="text-center text-2xl font-bold">Selamat Laporan anda telah berhasil di laporkan.</h5>
+            <h5 class="mb-10 text-center text-xl">Dengan Nomor Tiket : <span class="font-bold">{{ $laporan->tiket }}</span></h5>
 
             @if (session('status'))
                 <div class="alert py-2 px-5 text-center text-white border rounded-md bg-red-700 mb-5 text-xs">

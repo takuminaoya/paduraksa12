@@ -170,7 +170,14 @@ class ViewLaporanMasyarakat extends ViewRecord
                         ->schema([
                             MarkdownEditor::make('deskripsi')
                                 ->required(),
+                            TextInput::make('nomor_surat')
+                                ->prefixIcon('tabler-number')
+                                ->required(),
                             FileUpload::make('lampiran')
+                                ->multiple()
+                                ->maxFiles(4)
+                                ->image()
+                                ->imageEditor()
                                 ->visibility('public')
                                 ->directory('autoritas_lampiran')
                                 ->disk('public')
@@ -195,6 +202,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     'tanggal_autorisasi' => Carbon::now(),
                                     'deskripsi' => $data['deskripsi'],
                                     'lampiran' => $data['lampiran'],
+                                    'nomor_surat' => $data['nomor_surat'],
                                 ]);
 
                                 $record->status = TipeAutorisasi::TINDAK_LANJUT;
@@ -263,9 +271,6 @@ class ViewLaporanMasyarakat extends ViewRecord
                             TextInput::make('url')
                                 ->prefixIcon('tabler-link')
                                 ->required(),
-                            TextInput::make('nomor_surat')
-                                ->prefixIcon('tabler-number')
-                                ->required(),
                             MarkdownEditor::make('deskripsi')
                                 ->nullable(),
 
@@ -289,7 +294,6 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     'tanggal_autorisasi' => Carbon::now(),
                                     'deskripsi' => $data['deskripsi'],
                                     'url' => $data['url'],
-                                    'nomor_surat' => $data['nomor_surat'],
                                 ]);
 
                                 $record->status = TipeAutorisasi::SELESAI;

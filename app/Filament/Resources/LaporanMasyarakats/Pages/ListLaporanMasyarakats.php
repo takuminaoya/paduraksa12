@@ -37,6 +37,7 @@ class ListLaporanMasyarakats extends ListRecords
             'semua' => Tab::make('Semua')
                 ->icon('tabler-checks'),
             'proses' => Tab::make('Diproses')
+                ->badgeColor('primary')
                 ->icon('tabler-arrows-exchange')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::PROSES)->count()
@@ -44,24 +45,28 @@ class ListLaporanMasyarakats extends ListRecords
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', TipeAutorisasi::PROSES)),
 
             'verifikasi' => Tab::make('Diverifikasi')
+                ->badgeColor('info')
                 ->icon('tabler-check')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::VERIFIKASI)->count()
                 )
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', TipeAutorisasi::VERIFIKASI)),
             'tindak_lanjut' => Tab::make('Ditindak lanjuti')
+                ->badgeColor('warning')
                 ->icon('tabler-truck')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::TINDAK_LANJUT)->count()
                 )
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', TipeAutorisasi::TINDAK_LANJUT)),
             'batal' => Tab::make('Dibatalkan')
+                ->badgeColor('danger')
                 ->icon('tabler-x')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::BATAL)->count()
                 )
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', TipeAutorisasi::BATAL)),
             'selesai' => Tab::make('Diselesaikan')
+                ->badgeColor('gray')
                 ->icon('tabler-circle-dashed-check')
                 ->badge(
                     LaporanMasyarakat::where('status', TipeAutorisasi::SELESAI)->count()

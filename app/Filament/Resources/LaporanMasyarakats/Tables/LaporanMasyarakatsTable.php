@@ -28,11 +28,16 @@ class LaporanMasyarakatsTable
     {
         return $table
             ->columns([
-                TextColumn::make('tiket')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('tiket'),
                 TextColumn::make('klasifikasi')
+                    ->formatStateUsing(fn ($state) : string => str_replace('_', ' ', $state))
                     ->searchable(),
                 TextColumn::make('judul')
+                    ->description(
+                        function ($record) : string {
+                            return 'Dibuat Pada : ' . date('d F Y', strtotime($record->created_at));
+                        }
+                    )
                     ->searchable(),
                 TextColumn::make('tanggal_kejadian')
                     ->date()
@@ -42,9 +47,6 @@ class LaporanMasyarakatsTable
                     ->searchable(),
                 TextColumn::make('banjar_kejadian')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
-                ToggleColumn::make('anonim'),
-                ToggleColumn::make('rahasia')
                     ->searchable(),
                 TextColumn::make('nama')
                     ->searchable(),

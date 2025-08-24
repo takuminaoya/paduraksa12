@@ -52,9 +52,9 @@ class AutorisasisRelationManager extends RelationManager
             ->description('sebuah dokumen atau sistem yang memuat informasi mengenai individu, jabatan, atau sistem yang memiliki hak atau wewenang tertentu untuk melakukan suatu tindakan atau mengakses data dalam sebuah sistem.')
             ->recordTitleAttribute('user.name')
             ->columns([
-                TextColumn::make('tanggal_autorisasi')
-                    ->date()
-                    ->since()
+                TextColumn::make('created_at')
+                    ->label('Tanggal Autorisasi')
+                    ->date('D, d F Y H:i')
                     ->searchable(),
                 TextColumn::make('user.name')
                     ->label('Nama Autoritas')
@@ -146,6 +146,9 @@ class AutorisasisRelationManager extends RelationManager
                                             ->date(),
                                         TextEntry::make('tipe_autorisasi')
                                             ->badge(),
+                                        TextEntry::make('ns')
+                                            ->label('Nomor Surat')
+                                            ->default(fn($livewire) => $livewire->ownerRecord->nomorSurat()),
                                         TextEntry::make('deskripsi')
                                             ->columnSpanFull()
                                             ->html(),
@@ -190,7 +193,14 @@ class AutorisasisRelationManager extends RelationManager
                                             ])
                                             ->columns(2)
                                     ])
-                            ])
+                            ]),
+
+                        Action::make('Lihat Tanggapan')
+                            ->url(
+                                fn ($livewire) => url('tanggapan/preview/' . $livewire->ownerRecord->id)
+                            )
+                            ->icon('tabler-eye')
+                            ->openUrlInNewTab()
                     ])
                         ->dropdown(false)
                 ])->dropdownPlacement('top-end')

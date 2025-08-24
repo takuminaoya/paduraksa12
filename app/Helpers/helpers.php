@@ -186,6 +186,7 @@ function autoSendWhatsapp($id, $status)
                 'whatsapp_id' => $message['messageId'],
                 'receipent' => $detail['recipient'],
                 'isi_pesan' => $detail['message'],
+                'whatsapp_template_id' => $template,
                 'dikirim_pada' => Carbon::createFromTimestamp($detail['created'])->toDateTimeString(),
 
             ]);

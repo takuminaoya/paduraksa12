@@ -115,7 +115,7 @@
 
         <div class="content" style="width:100%;">
             <p class="tanggal">
-                Ungasan, {{ dateReformat($data->created_at, 1) }}
+                Ungasan, {{ dateReformat($data->created_at) }}
             </p>
 
             <p class="kepada">
@@ -188,13 +188,29 @@
                 </table>
             </div>
 
+            @php
+                $banjar = '';
+                $laporan = strtolower(str_replace('_', ' ', $data->klasifikasi));
+
+                switch ($data->klasifikasi) {
+                    case 'PENGADUAN':
+                        $banjar = 'banjar <span>' . $data->banjar_kejadian . '</span>';
+                        break;
+                }
+            @endphp
+
             <p class="kata-1">
-                Melalui Sistem paduraksa ini saya ingin menyampaikan <span>{{ strtolower(str_replace("_", " ", $data->klasifikasi)) }}</span> yaitu <span>{{ strtolower($data->judul) }}</span> pada
-                tanggal <span>{{ dateReformat($data->created_at) }}</span> bertempat di <span>{{ strtolower($data->lokasi_kejadian) }}</span> banjar <span>{{ strtolower($data->banjar_kejadian) }}</span> bahwa <span>{{ $data->isi }}</span>
+                Melalui Sistem paduraksa ini saya ingin menyampaikan
+                <span>{{ strtolower(str_replace('_', ' ', $data->klasifikasi)) }}</span> yaitu
+                <span>{{ strtolower($data->judul) }}</span> pada
+                tanggal <span>{{ dateReformat($data->created_at) }}</span> bertempat di
+                <span>{{ strtolower($data->lokasi_kejadian) }}</span> {{ $banjar }} bahwa
+                <span>{{ $data->isi }}</span>
             </p>
 
             <p class="kata-2">
-                Demikian Kategori paduraksa ini saya sampaikan. Dengan ini kami mohon bapak Perbekel Ungasan dapat
+                Demikian <span style="text-transform: capitalize;">{{ $laporan }}</span> ini saya sampaikan.
+                Dengan ini kami mohon bapak Perbekel Ungasan dapat
                 meningdaklanjuti surat ini
             </p>
 
@@ -218,7 +234,32 @@
 
         <div class="content">
             @if ($data->lampiran)
-                <img class="lampiran" src="{{ public_path('storage/' . $data->lampiran) }}" alt="">
+                @php
+                    $row = 2;
+                    $col = 2;
+                @endphp
+
+                <table style="width: 100%;">
+                    @for ($i = 0; $i < $row; $i++)
+                        <tr>
+                            @for ($a = 0; $a < $col; $a++)
+                                @if ($i > 0)
+                                    @if (array_key_exists($a + 2, $data->lampiran))
+                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img class="lampiran" style="width:250px;"
+                                                src="{{ public_path('storage/' . $data->lampiran[$a + 2]) }}"
+                                                alt=""></td>
+                                    @endif
+                                @else
+                                    @if (array_key_exists($a, $data->lampiran))
+                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img class="lampiran" style="width:250px;"
+                                                src="{{ public_path('storage/' . $data->lampiran[$a]) }}"
+                                                alt=""></td>
+                                    @endif
+                                @endif
+                            @endfor
+                        </tr>
+                    @endfor
+                </table>
             @else
                 <h5 style="text-align: center; font-weight:bold; text-transform:uppercase;">Tidak Ada Lampiran</h5>
             @endif

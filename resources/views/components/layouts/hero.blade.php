@@ -2,10 +2,17 @@
     'size' => 'min-h-96'
 ])
 <section>
+
+    <style>
+        #hero {
+            background-image: url('{{ asset("storage/images/bg.jpg") }}');
+        }
+    </style>
+
     <div id="hero" class="relative flex flex-row {{ $size }} justify-center lg:pt-40 pt-28 pb-52 bg-red-700 text-white">
         <div class="container w-full text-center lg:pt-20 lg:mx-0 mx-5 pt-10">
-            <h2 class="b text-4xl font-bold">Pengaduan Aspirasi Masyarakat Desa Ungasan</h2>
-            <p class="text-xl mt-3 mb-10">Sampaikan laporan Anda langsung kepada instansi pemerintah desa ungasan.
+            <h2 class="b text-4xl font-bold uppercase">Pengaduan Aspirasi Masyarakat Desa Ungasan</h2>
+            <p class="text-xl mt-3 mb-10 capitalize">Sampaikan laporan Anda langsung kepada instansi pemerintah desa ungasan.
             </p>
 
             {{ $slot }}

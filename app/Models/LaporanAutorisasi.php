@@ -10,6 +10,10 @@ class LaporanAutorisasi extends Model
 {
     protected $guarded = ["id"];
 
+    protected $casts = [
+        'lampiran' => 'array'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

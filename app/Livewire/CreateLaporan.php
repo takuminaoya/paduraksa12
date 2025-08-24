@@ -94,6 +94,14 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                                             case KlasifikasiLaporan::PENGADUAN_LAYANAN:
                                                 return false;
                                                 break;
+
+                                            case KlasifikasiLaporan::KRITIK_DAN_SARAN:
+                                                return false;
+                                                break;
+
+                                            case KlasifikasiLaporan::KONSULTASI_HUKUM:
+                                                return false;
+                                                break;
                                         }
 
                                         return true;
@@ -104,8 +112,10 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                                 ->columnSpanFull()
                                 ->options(BanjarEnum::class),
                             // Toggle::make('anonim'),
-                            Toggle::make('rahasia'),
                             FileUpload::make('lampiran')
+                                ->multiple()
+                                ->image()
+                                ->maxFiles(4)
                                 ->imageEditor()
                                 ->disk('public')
                                 ->visibility('public')
