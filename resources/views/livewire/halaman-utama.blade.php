@@ -48,9 +48,9 @@
 
     <section id="progress" class="flex flex-row justify-center">
         <div class="progress-grp relative p-20">
-            <div class="cont grid lg:grid-cols-5 gap-5 relative">
+            <div class="cont grid lg:grid-cols-6 gap-5 relative">
 
-                <div class="btn lg:col-span-5 flex flex-row justify-center items-center mb-5">
+                <div class="btn lg:col-span-6 flex flex-row justify-center items-center mb-5">
                     <h5 class="text-2xl text-center font-bold text-gray-400 text-shadow-2xs">JUMLAH PER STATUS</h5>
                 </div>
 
@@ -100,7 +100,7 @@
 
     <section id="jumlah" class="flex flex-row justify-center">
         <div class="w-full py-20 text-center  text-white">
-            <h5 class="font-bold text-3xl">Jumlah Yang Terdaftar Pada Sistem</h5>
+            <h5 class="font-bold text-3xl uppercase">Jumlah Yang Terdaftar Pada Sistem</h5>
             <h1 class="font-bold text-5xl mt-5">{{ $laporans['total'] }} Laporan</h1>
             {{-- 
             <div class="btn lg:col-span-5 flex flex-row justify-center items-center mt-10">
