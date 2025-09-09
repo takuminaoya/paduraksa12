@@ -232,6 +232,12 @@
             <h2 class="t1">LAMPIRAN FOTO PENDUKUNG</h2>
         </div>
 
+        <div class="identitas">
+            <label for="">Foto Identitas</label>
+            <img class="lampiran" style="width:250px;"
+                                src="{{ public_path('storage/' . $data->foto_identitas) }}" alt="">
+        </div>
+
         <div class="content">
             @if ($data->lampiran)
                 @php
@@ -245,13 +251,15 @@
                             @for ($a = 0; $a < $col; $a++)
                                 @if ($i > 0)
                                     @if (array_key_exists($a + 2, $data->lampiran))
-                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img class="lampiran" style="width:250px;"
+                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img
+                                                class="lampiran" style="width:250px;"
                                                 src="{{ public_path('storage/' . $data->lampiran[$a + 2]) }}"
                                                 alt=""></td>
                                     @endif
                                 @else
                                     @if (array_key_exists($a, $data->lampiran))
-                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img class="lampiran" style="width:250px;"
+                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img
+                                                class="lampiran" style="width:250px;"
                                                 src="{{ public_path('storage/' . $data->lampiran[$a]) }}"
                                                 alt=""></td>
                                     @endif

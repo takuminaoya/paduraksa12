@@ -103,6 +103,30 @@ class LaporanMasyarakatInfolist
                         ImageEntry::make('lampiran')
                             ->columnSpanFull()
                             ->disk('public'),
+                        Action::make('Galeri Gambar Lampiran')
+                            ->label("Galeri Gambar Lampiran")
+                            ->slideOver()
+                            ->icon('tabler-files')
+                            ->modalWidth('full')
+                            ->modalSubmitAction(false)
+                            ->schema(
+                                function ($record) : array {
+                                    if($record->lampiran){
+                                        $conts = [];
+
+                                        foreach ($record->lampiran as $key => $lp) {
+                                            $conts[] = ImageEntry::make('Lampiran : ' . $key)
+                                                ->imageWidth("fit")
+                                                ->imageHeight("100%")
+                                                ->state(asset('storage/' . $lp));
+                                        }
+
+                                        return $conts;
+                                    }
+
+                                    return [];
+                                }
+                            )
                     ]),
 
                 Section::make('Informasi Pelapor')
@@ -114,7 +138,8 @@ class LaporanMasyarakatInfolist
                         TextEntry::make('nik'),
                         TextEntry::make('nama'),
                         TextEntry::make('alamat'),
-                        TextEntry::make('tanggal_lahir'),
+                        TextEntry::make('tanggal_lahir')
+                            ->date(),
                         TextEntry::make('jenis_kelamin'),
                         TextEntry::make('no_telpon')
                             ->prefix('+62'),
@@ -122,6 +147,9 @@ class LaporanMasyarakatInfolist
                         TextEntry::make('created_at')
                             ->label('Dibuat pada')
                             ->dateTime(),
+                        ImageEntry::make('foto_identitas')
+                            ->disk('public')
+                            ->defaultImageUrl(url('storage/images/placeholder.jpg'))
                     ])
             ]);
     }

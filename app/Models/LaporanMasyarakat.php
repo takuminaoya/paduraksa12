@@ -87,7 +87,6 @@ class LaporanMasyarakat extends Model
             '[laporan.created_at]',
             '[laporan.alasan]',
             '[laporan.tindakan]',
-            '[laporan.link]',
             '[laporan.url]',
             '[laporan.nomor]',
         ];
@@ -110,8 +109,7 @@ class LaporanMasyarakat extends Model
             '[laporan.created_at]' => $this->created_at,
             '[laporan.alasan]' => $this->getAutorisasiString(TipeAutorisasi::BATAL, 'deskripsi'),
             '[laporan.tindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
-            '[laporan.link]' => '-',
-            '[laporan.url]' => $this->url,
+            '[laporan.url]' => $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'url'),
             '[laporan.nomor]' => $this->nomorSurat(),
 
         ];
@@ -137,8 +135,7 @@ class LaporanMasyarakat extends Model
                 '[laporan.created_at]' => $data->created_at,
                 '[laporan.alasan]' => $data->getAutorisasiString(TipeAutorisasi::BATAL, 'deskripsi'),
                 '[laporan.tindakan]' => $data->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
-                '[laporan.link]' => '-',
-                '[laporan.url]' => $data->url,
+                '[laporan.url]' => $data->getAutorisasiString(TipeAutorisasi::SELESAI, 'url'),
                 '[laporan.nomor]' => $this->nomorSurat(),
 
             ];

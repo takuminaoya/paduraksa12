@@ -171,7 +171,14 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
                                 ->required(),
                             TextInput::make('pekerjaan')
                                 ->required(),
-                            // Toggle::make('penyandang_disabilitas'),
+                            FileUpload::make('foto_identitas')
+                                ->image()
+                                ->imageEditor()
+                                ->disk('public')
+                                ->visibility('public')
+                                ->directory('foto_identitas')
+                                ->columnSpanFull()
+                                ->required()
                         ])
                         ->columns(2),
                 ])->submitAction(new HtmlString('<button class="w-full py-2 px-5 rounded-lg bg-amber-400 hover:bg-amber-300" type="submit"><x-tabler-plus />Laporkan Tautan</button>'))

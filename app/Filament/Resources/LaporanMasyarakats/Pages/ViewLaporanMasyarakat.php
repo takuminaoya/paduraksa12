@@ -16,6 +16,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\LaporanMasyarakats\LaporanMasyarakatResource;
+use AshAllenDesign\ShortURL\Classes\Builder;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\Storage;
 
@@ -56,13 +57,17 @@ class ViewLaporanMasyarakat extends ViewRecord
                     ->action(
                         function ($record, $livewire) {
 
+                            $lps = [
+                                $livewire->record->tiket . '.pdf'
+                            ];
+
                             $user = Auth::user();
                             LaporanAutorisasi::create([
                                 'user_id' => $user->id,
                                 'laporan_masyarakat_id' => $record->id,
                                 'tipe_autorisasi' => TipeAutorisasi::PROSES,
                                 'tanggal_autorisasi' => Carbon::now(),
-                                'lampiran' => $livewire->record->tiket . '.pdf',
+                                'lampiran' => $lps,
                             ]);
 
                             $record->status = TipeAutorisasi::PROSES;
@@ -287,13 +292,20 @@ class ViewLaporanMasyarakat extends ViewRecord
                         ->action(
                             function ($data, $record): void {
                                 $user = Auth::user();
+
+                                $short = app(Builder::class)
+                                    ->destinationUrl($data['url'])
+                                    ->trackVisits()
+                                    ->trackIPAddress()
+                                    ->make();
+
                                 LaporanAutorisasi::create([
                                     'user_id' => $user->id,
                                     'laporan_masyarakat_id' => $record->id,
                                     'tipe_autorisasi' => TipeAutorisasi::SELESAI,
                                     'tanggal_autorisasi' => Carbon::now(),
                                     'deskripsi' => $data['deskripsi'],
-                                    'url' => $data['url'],
+                                    'url' => $short->default_short_url,
                                 ]);
 
                                 $record->status = TipeAutorisasi::SELESAI;

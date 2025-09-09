@@ -48,6 +48,7 @@
         .judul {
             font-size: 16px;
         }
+
         .page-break {
             page-break-after: always;
         }
@@ -128,9 +129,9 @@
             padding-right: 0.5rem;
         }
 
-        section {
-            margin-left: 2rem;
-            margin-right: 2rem;
+        .content_di {
+            width: 90% !important;
+            margin: 0 auto;
         }
 
         .line {
@@ -144,7 +145,7 @@
             <img class="ctl" src="{{ public_path('storage/images/kop_surat.jpg') }}" width="100%" alt="">
         </header>
 
-        <div class="content" style="width:100%;">
+        <div class="content_di" style="width:100%;">
             <p class="tanggal">
                 Ungasan, {{ dateReformat($data->getAutorisasiString('TINDAK_LANJUT', 'created_at')) }}
             </p>
@@ -215,7 +216,7 @@
             </table>
 
             <div>
-                Tembusan disampaikan kepada : <br> 
+                Tembusan disampaikan kepada : <br>
                 Arsip
             </div>
         </div>
@@ -225,23 +226,25 @@
         <header>
             <img class="ctl" src="{{ public_path('storage/images/kop_surat.jpg') }}" width="100%" alt="">
         </header>
-        <p class="kepada judul">
-            Lampiran Surat
-        <table class="tab_ah">
-            <tr>
-                <td>Nomor</td>
-                <td>:</td>
-                <td>{{ $data->nomorSurat() }}</td>
-            </tr>
-            <tr>
-                <td>Hal</td>
-                <td>:</td>
-                <td><strong>Tindak Lanjut Laporan Paduraksa</strong></td>
-            </tr>
-        </table>
-        </p>
 
-        <div class="content" style="margin-top: 2rem;">
+        <div class="content_di" style="margin-top: 2rem;">
+            <p class="kepada judul">
+                Lampiran Surat
+            </p>
+
+            <table class="tab_ah" style="margin-bottom: 1rem;">
+                <tr>
+                    <td>Nomor</td>
+                    <td>:</td>
+                    <td>{{ $data->nomorSurat() }}</td>
+                </tr>
+                <tr>
+                    <td>Hal</td>
+                    <td>:</td>
+                    <td><strong>Tindak Lanjut Laporan Paduraksa</strong></td>
+                </tr>
+            </table>
+
             <table class="tab_ah">
                 <tr>
                     <td>Nomor Tiket</td>
@@ -251,7 +254,8 @@
                 <tr>
                     <td>Klasifikasi Laporan</td>
                     <td>:</td>
-                    <td style="text-transform: capitalize;">{{ strtolower(str_replace('_', ' ', $data->klasifikasi)) }}</td>
+                    <td style="text-transform: capitalize;">{{ strtolower(str_replace('_', ' ', $data->klasifikasi)) }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Nama Pelapor</td>
@@ -263,14 +267,16 @@
                     <td>:</td>
                     <td>0{{ $data->no_telpon }}</td>
                 </tr>
+            </table>
+
+            <table class="tab_ah">
                 <tr>
                     <td>Isi Laporan</td>
                     <td>:</td>
                     <td></td>
                 </tr>
-
                 <tr>
-                    <td colspan="3" style="padding: 0.6rem 0rem;">
+                    <td style="padding: 0.6rem 0rem;">
                         {{ $data->isi }}
                     </td>
                 </tr>
@@ -278,7 +284,7 @@
 
             <div class="line"></div>
 
-            Tanggapan atas Laporan : 
+            Tanggapan atas Laporan :
             <p>
                 {{ $data->getAutorisasiString('TINDAK_LANJUT', 'deskripsi') }}
             </p>
@@ -294,7 +300,7 @@
             Dokumentasi
         </p>
 
-        <div class="content">
+        <div class="content_di">
             @php
                 $autorisasi = $data->oautorisasi('TINDAK_LANJUT');
                 $lampiran = $autorisasi->lampiran;
@@ -311,15 +317,17 @@
                             @for ($a = 0; $a < $col; $a++)
                                 @if ($i > 0)
                                     @if (array_key_exists($a + 2, $lampiran))
-                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img class="lampiran" style="width:250px;"
-                                                src="{{ public_path('storage/' . $lampiran[$a + 2]) }}"
-                                                alt=""></td>
+                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img
+                                                class="lampiran" style="width:250px;"
+                                                src="{{ public_path('storage/' . $lampiran[$a + 2]) }}" alt="">
+                                        </td>
                                     @endif
                                 @else
                                     @if (array_key_exists($a, $lampiran))
-                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img class="lampiran" style="width:250px;"
-                                                src="{{ public_path('storage/' . $lampiran[$a]) }}"
-                                                alt=""></td>
+                                        <td style="width: 250px; text-align:center; padding-bottom:10px;"><img
+                                                class="lampiran" style="width:250px;"
+                                                src="{{ public_path('storage/' . $lampiran[$a]) }}" alt="">
+                                        </td>
                                     @endif
                                 @endif
                             @endfor

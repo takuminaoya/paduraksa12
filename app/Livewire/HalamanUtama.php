@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Enum\TipeAutorisasi;
+use Filament\Actions\Action;
 use Filament\Schemas\Schema;
 use App\Enum\KlasifikasiLaporan;
-use App\Enum\TipeAutorisasi;
 use App\Models\LaporanMasyarakat;
+use Filament\Support\Colors\Color;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Infolists\Components\TextEntry;
@@ -71,6 +73,47 @@ class HalamanUtama extends Component implements HasSchemas
                     ->description('Rincian isi laporan yang disampaikan oleh warga kepada pihak desa terkait berbagai permasalahan, keluhan, aspirasi, atau permintaan layanan.')
                     ->columns(2)
                     ->collapsible()
+                    ->afterHeader([
+                        Action::make('status')
+                            ->color(
+                                function ($record) {
+                                    switch ($record->status) {
+                                        case 'AKTIF':
+                                            return Color::Blue;
+                                            break;
+
+                                        case 'PROSES':
+                                            return Color::Purple;
+                                            break;
+
+                                        case 'VERIFIKASI':
+                                            return Color::Orange;
+                                            break;
+
+                                        case 'TINDAK_LANJUT':
+                                            return Color::Gray;
+                                            break;
+
+                                        case 'BATAL':
+                                            return Color::Red;
+                                            break;
+
+                                        case 'SELESAI':
+                                            return Color::Green;
+                                            break;
+                                    }
+                                }
+                            )
+                            ->label(
+                                function ($record) {
+                                    if (is_string($record->status)) {
+                                        return str_replace('_', ' ', $record->status);
+                                    } else {
+                                        return $record->status->name;
+                                    }
+                                }
+                            ),
+                    ])
                     ->schema([
                         TextEntry::make('tiket')
                             ->copyable()

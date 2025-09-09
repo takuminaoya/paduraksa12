@@ -24,6 +24,12 @@ class Whapify
         $response = $client->get(config('whapify.base_url') . 'get/wa.accounts?secret=' . config('whapify.secret') . '&limit=' . $limit . '&page=' . $page);
         $body = json_decode($response->getBody(), true);
 
+        if ($body['status'] == "404") {
+            return collect([
+                "status" => "backup_sent"
+            ]);
+        }
+
         return collect($body['data']);
     }
 
@@ -52,7 +58,7 @@ class Whapify
         $response = $client->post(config('whapify.base_url') . 'send/whatsapp', $params);
         $body = json_decode($response->getBody(), true);
 
-        if($body['data'] == false)
+        if ($body['data'] == false)
             return null;
 
         return collect($body['data']);
@@ -72,6 +78,12 @@ class Whapify
 
         $response = $client->get(config('whapify.base_url') . 'get/wa.message?secret=' . config('whapify.secret') . '&type=' . $type . '&id=' . $id);
         $body = json_decode($response->getBody(), true);
+
+        if ($body['status'] == "404") {
+            return collect([
+                "status" => "backup_sent"
+            ]);
+        }
 
         return collect($body['data']);
     }

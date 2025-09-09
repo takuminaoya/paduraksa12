@@ -196,10 +196,12 @@ class AutorisasisRelationManager extends RelationManager
                             ]),
 
                         Action::make('Lihat Tanggapan')
+                            ->visible(fn ($record) => $record->tipe_autorisasi == "TINDAK_LANJUT" ? true : false)
+                            ->label('Lihat Tanggapan')
                             ->url(
                                 fn ($livewire) => url('tanggapan/preview/' . $livewire->ownerRecord->id)
                             )
-                            ->icon('tabler-eye')
+                            ->icon('tabler-printer')
                             ->openUrlInNewTab()
                     ])
                         ->dropdown(false)
