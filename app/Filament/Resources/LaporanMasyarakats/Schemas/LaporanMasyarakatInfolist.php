@@ -100,6 +100,8 @@ class LaporanMasyarakatInfolist
                             ),
                         TextEntry::make('status')
                             ->badge(),
+                        ImageEntry::make('foto_identitas')
+                            ->disk('public'),
                         ImageEntry::make('lampiran')
                             ->columnSpanFull()
                             ->disk('public'),
@@ -110,9 +112,10 @@ class LaporanMasyarakatInfolist
                             ->modalWidth('full')
                             ->modalSubmitAction(false)
                             ->schema(
-                                function ($record) : array {
-                                    if($record->lampiran){
-                                        $conts = [];
+                                function ($record): array {
+                                    $conts = [];
+
+                                    if ($record->lampiran) {
 
                                         foreach ($record->lampiran as $key => $lp) {
                                             $conts[] = ImageEntry::make('Lampiran : ' . $key)
@@ -120,11 +123,14 @@ class LaporanMasyarakatInfolist
                                                 ->imageHeight("100%")
                                                 ->state(asset('storage/' . $lp));
                                         }
-
-                                        return $conts;
                                     }
 
-                                    return [];
+                                    $conts[] = ImageEntry::make('Foto Identitas : ')
+                                        ->imageWidth("fit")
+                                        ->imageHeight("100%")
+                                        ->state(asset('storage/' . $record->foto_identitas));
+
+                                    return $conts;
                                 }
                             )
                     ]),

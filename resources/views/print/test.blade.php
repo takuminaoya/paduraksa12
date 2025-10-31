@@ -232,10 +232,11 @@
             <h2 class="t1">LAMPIRAN FOTO PENDUKUNG</h2>
         </div>
 
-        <div class="identitas">
-            <label for="">Foto Identitas</label>
-            <img class="lampiran" style="width:250px;"
-                                src="{{ public_path('storage/' . $data->foto_identitas) }}" alt="">
+        <div class="identitas" style="width: 100%;  text-align:center;">
+            <img class="lampiran" style="width:250px;" src="{{ public_path('storage/' . $data->foto_identitas) }}"
+                alt="">
+            <br>
+            <div style="text-align: center;">Foto identitas</div>
         </div>
 
         <div class="content">
