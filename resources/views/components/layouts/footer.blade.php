@@ -6,7 +6,7 @@
             <a href="#" class="text-gray-500 font-bold hover:underline">BLOG</a>
             <a href="#" class="text-gray-500 font-bold hover:underline">TENTANG KAMI</a>
         </div> --}}
-        <p>Copyright {{ date('Y') }}. Pemerintahan Desa Ungasan & Kayana Creative. Hak cipta dilindungi
+        <p>Copyright {{ date('Y') }}. Pemerintahan Desa Ungasan & Adhitama. Hak cipta dilindungi
             Undang-Undang.</p>
     </div>
 </section>
