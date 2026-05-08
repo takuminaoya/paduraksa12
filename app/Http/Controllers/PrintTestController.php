@@ -37,4 +37,18 @@ class PrintTestController extends Controller
         ]);
         return $pdf->setPaper('f4')->stream();
     }
+
+    // print preview untuk print laporan
+    public function viewLaporanPublic($uuid)
+    {
+        Carbon::setLocale('IND');
+        App::setLocale('IND');
+
+        $data = LaporanMasyarakat::where('uuid', $uuid)->first();
+
+        $pdf = Pdf::loadView('print.test', [
+            "data" => $data
+        ]);
+        return $pdf->setPaper('f4')->stream();
+    }
 }

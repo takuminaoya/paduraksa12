@@ -12,6 +12,7 @@ class WhatsappLaporan extends Model
     public function status(): string
     {
         $stats = Whapify::getSingleChat($this->whatsapp_id);
-        return $stats->status;
+
+        return $stats['status'];
     }
 }

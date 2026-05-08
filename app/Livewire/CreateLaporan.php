@@ -205,8 +205,11 @@ class CreateLaporan extends Component implements HasSchemas, HasActions
         $lap->tiket = $gen;
         $lap->save();
 
+
         // kirim whatsapp
+        $admin = "6282359351605";
         autoSendWhatsapp($lap->id, 'aktif');
+        autoSendWhatsapp($lap->id, null, $admin);
 
         $this->redirect('/notif/sukses/' . $lap->uuid, navigate: true);
     }

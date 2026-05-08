@@ -89,6 +89,7 @@ class LaporanMasyarakat extends Model
             '[laporan.tindakan]',
             '[laporan.url]',
             '[laporan.nomor]',
+            '[laporan.view]'
         ];
     }
 
@@ -111,7 +112,7 @@ class LaporanMasyarakat extends Model
             '[laporan.tindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
             '[laporan.url]' => $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'url'),
             '[laporan.nomor]' => $this->nomorSurat(),
-
+            '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id)
         ];
     }
 
@@ -137,6 +138,8 @@ class LaporanMasyarakat extends Model
                 '[laporan.tindakan]' => $data->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
                 '[laporan.url]' => $data->getAutorisasiString(TipeAutorisasi::SELESAI, 'url'),
                 '[laporan.nomor]' => $this->nomorSurat(),
+                '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id)
+
 
             ];
         } else {
@@ -179,6 +182,11 @@ class LaporanMasyarakat extends Model
     public function tanggapans(): HasMany
     {
         return $this->hasMany(LaporanTanggapan::class);
+    }
+
+    public function anggotas(): HasMany
+    {
+        return $this->hasMany(AnggotaPenindakan::class, 'laporan_masyarakat_id');
     }
 
     public function oautorisasi(TipeAutorisasi|string $tipe)

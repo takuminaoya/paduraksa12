@@ -165,18 +165,31 @@ function dateReformat($tanggal, $tampilkanHari = false, $bulanDipersingkat = fal
     }
 }
 
-function autoSendWhatsapp($id, $status)
+function autoSendWhatsapp($id, $status = null, $nomor = null, string $slug = 'whatsapp-regis-baru-ke-admin')
 {
     $lap = LaporanMasyarakat::find($id);
 
     if ($lap->auto_whatsapp) {
-        $template = ApplicationSetting::where('key', $lap->whatsapp_templates[$status]['slug'])->value('value');
 
-        $templateIsi = WhatsappTemplate::find($template);
+        // Jika status tidak sama dengan null
+        if ($status) {
+            $template = ApplicationSetting::where('key', $lap->whatsapp_templates[$status]['slug'])->value('value');
+
+            $templateIsi = WhatsappTemplate::find($template);
+        } else {
+            // jika null dan juga $nomor sama dengan null
+            $templateIsi = WhatsappTemplate::where('slug', $slug)->first();
+            $template = $templateIsi->id;
+        }
 
         $reformatedIsi = $lap->reformatStringWithTag($templateIsi->isi, $lap->id);
 
-        $message = Whapify::sendSingleChat('62' . $lap->no_telpon, $reformatedIsi);
+        // jika nomor tidak null
+        if($nomor){
+            $message = Whapify::sendSingleChat('62' . $lap->no_telpon, $reformatedIsi);
+        } else {
+            $message = Whapify::sendSingleChat('62' . $nomor, $reformatedIsi);
+        }
 
         if ($message) {
             $detail = Whapify::getSingleChat($message['messageId']);
@@ -213,7 +226,7 @@ function autoSendWhatsapp($id, $status)
                     Action::make('ubah')
                         ->icon('tabler-edit')
                         ->color(Color::Amber)
-                        ->url(url('admin/laporan-masyarakats/'.$lap->id.'/edit'))
+                        ->url(url('admin/laporan-masyarakats/' . $lap->id . '/edit'))
                 ])
                 ->sendToDatabase(Auth::user());
         }

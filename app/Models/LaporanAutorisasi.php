@@ -19,12 +19,18 @@ class LaporanAutorisasi extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function tipe_penindakan(): BelongsTo
+    {
+        return $this->belongsTo(TipePenindakan::class, 'tipe_penindakan_id');
+    }
+
     public function laporan(): BelongsTo
     {
         return $this->belongsTo(LaporanMasyarakat::class, 'laporan_masyarakat_id');
     }
 
-    public function reports(): HasMany {
+    public function reports(): HasMany
+    {
         return $this->hasMany(ReportAutorisasi::class);
     }
 }

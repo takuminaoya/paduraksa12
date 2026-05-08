@@ -18,3 +18,6 @@ Route::get('/daftar', HalamanLaporan::class)->name('daftar');
 
 Route::get('print/preview/{id}', [PrintTestController::class, 'preview']);
 Route::get('tanggapan/preview/{id}', [PrintTestController::class, 'tanggapan']);
+
+Route::get('public/preview/{uuid}', [PrintTestController::class, 'viewLaporanPublic']);
+

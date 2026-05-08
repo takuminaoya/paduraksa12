@@ -204,7 +204,7 @@
                 <span>{{ strtolower(str_replace('_', ' ', $data->klasifikasi)) }}</span> yaitu
                 <span>{{ strtolower($data->judul) }}</span> pada
                 tanggal <span>{{ dateReformat($data->created_at) }}</span> bertempat di
-                <span>{{ strtolower($data->lokasi_kejadian) }}</span> {{ $banjar }} bahwa
+                <span>{{ strtolower($data->lokasi_kejadian) }}</span> {!! $banjar !!} bahwa
                 <span>{{ $data->isi }}</span>
             </p>
 
