@@ -55,8 +55,8 @@ class LaporanMasyarakat extends Model
     public function nomorSurat(): string
     {
 
-        if ($this->autorisasi(TipeAutorisasi::TINDAK_LANJUT)) {
-            $aut = $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'nomor_surat');
+        if ($this->autorisasi(TipeAutorisasi::SELESAI)) {
+            $aut = $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'nomor_surat');
 
             $raws = [
                 $this->prefix,
@@ -81,7 +81,6 @@ class LaporanMasyarakat extends Model
             '[laporan.lokasi_kejadian]',
             '[laporan.banjar_kejadian]',
             '[laporan.anonim]',
-            '[laporan.judul]',
             '[laporan.nama]',
             '[laporan.uuid]',
             '[laporan.created_at]',
@@ -89,7 +88,11 @@ class LaporanMasyarakat extends Model
             '[laporan.tindakan]',
             '[laporan.url]',
             '[laporan.nomor]',
-            '[laporan.view]'
+            '[laporan.view]',
+            '[tindak_lanjut.tanggal_kegiatan]',
+            '[tindak_lanjut.titik_kumpul]',
+            '[tindak_lanjut.tipe_penindakan]',
+
         ];
     }
 
@@ -104,7 +107,6 @@ class LaporanMasyarakat extends Model
             '[laporan.lokasi_kejadian]' => $this->lokasi_kejadian,
             '[laporan.banjar_kejadian]' => $this->banjar_kejadian,
             '[laporan.anonim]' => $this->anonim,
-            '[laporan.judul]' => $this->judul,
             '[laporan.nama]' => $this->nama,
             '[laporan.uuid]' => $this->uuid,
             '[laporan.created_at]' => $this->created_at,
@@ -112,7 +114,10 @@ class LaporanMasyarakat extends Model
             '[laporan.tindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
             '[laporan.url]' => $this->getAutorisasiString(TipeAutorisasi::SELESAI, 'url'),
             '[laporan.nomor]' => $this->nomorSurat(),
-            '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id)
+            '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id),
+            '[tindak_lanjut.tanggal_kegiatan]' => dateReformat($this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tanggal_kegiatan'), 1),
+            '[tindak_lanjut.titik_kumpul]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'titik_kumpul'), 
+            '[tindak_lanjut.tipe_penindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tipe_penindakan'),
         ];
     }
 
@@ -130,7 +135,6 @@ class LaporanMasyarakat extends Model
                 '[laporan.lokasi_kejadian]' => $data->lokasi_kejadian,
                 '[laporan.banjar_kejadian]' => $data->banjar_kejadian,
                 '[laporan.anonim]' => $data->anonim,
-                '[laporan.judul]' => $data->judul,
                 '[laporan.nama]' => $data->nama,
                 '[laporan.uuid]' => $data->uuid,
                 '[laporan.created_at]' => $data->created_at,
@@ -138,7 +142,10 @@ class LaporanMasyarakat extends Model
                 '[laporan.tindakan]' => $data->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'deskripsi'),
                 '[laporan.url]' => $data->getAutorisasiString(TipeAutorisasi::SELESAI, 'url'),
                 '[laporan.nomor]' => $this->nomorSurat(),
-                '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id)
+                '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id),
+                '[tindak_lanjut.tanggal_kegiatan]' => dateReformat($this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tanggal_kegiatan'), 1),
+                '[tindak_lanjut.titik_kumpul]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'titik_kumpul'), 
+                '[tindak_lanjut.tipe_penindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tipe_penindakan'),
 
 
             ];

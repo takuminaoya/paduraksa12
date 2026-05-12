@@ -101,38 +101,25 @@ class LaporanMasyarakatInfolist
                         TextEntry::make('status')
                             ->badge(),
                         ImageEntry::make('foto_identitas')
+                            ->imageGallery()
                             ->disk('public'),
-                        ImageEntry::make('lampiran')
+                        ImageEntry::make('lampirans')
                             ->columnSpanFull()
-                            ->disk('public'),
-                        Action::make('Galeri Gambar Lampiran')
-                            ->label("Galeri Gambar Lampiran")
-                            ->slideOver()
-                            ->icon('tabler-files')
-                            ->modalWidth('full')
-                            ->modalSubmitAction(false)
-                            ->schema(
+                            ->imageGallery()
+                            ->default(
                                 function ($record): array {
                                     $conts = [];
-
                                     if ($record->lampiran) {
 
-                                        foreach ($record->lampiran as $key => $lp) {
-                                            $conts[] = ImageEntry::make('Lampiran : ' . $key)
-                                                ->imageWidth("fit")
-                                                ->imageHeight("100%")
-                                                ->state(asset('storage/' . $lp));
+                                        foreach ($record->lampiran as $lp) {
+                                            $conts[] = asset('storage/' . $lp);
                                         }
                                     }
-
-                                    $conts[] = ImageEntry::make('Foto Identitas : ')
-                                        ->imageWidth("fit")
-                                        ->imageHeight("100%")
-                                        ->state(asset('storage/' . $record->foto_identitas));
 
                                     return $conts;
                                 }
                             )
+                            ->disk('public'),
                     ]),
 
                 Section::make('Informasi Pelapor')

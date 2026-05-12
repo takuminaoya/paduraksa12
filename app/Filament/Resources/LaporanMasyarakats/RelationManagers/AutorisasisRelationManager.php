@@ -108,6 +108,7 @@ class AutorisasisRelationManager extends RelationManager
                                 MarkdownEditor::make('deskripsi')
                                     ->required(),
                                 FileUpload::make('lampiran')
+                                    ->optimize()
                                     ->disk('public')
                                     ->directory('auth_lampiran')
                                     ->visibility('public')
@@ -152,11 +153,25 @@ class AutorisasisRelationManager extends RelationManager
                                         TextEntry::make('deskripsi')
                                             ->columnSpanFull()
                                             ->html(),
-                                        ImageEntry::make('lampiran')
+                                        ImageEntry::make('lampirans')
                                             ->columnSpanFull()
                                             ->disk('public')
-                                            ->url(fn($state): string => asset('storage/' . $state))
-                                            ->openUrlInNewTab()
+                                            ->imageGallery()
+                                            ->default(
+                                                function ($record) {
+                                                    if(is_array($record->lampiran)) {
+                                                        $conts = [];
+                                                        if ($record) {
+
+                                                            foreach ($record->lampiran as $lp) {
+                                                                $conts[] = asset('storage/' . $lp);
+                                                            }
+                                                        }
+
+                                                        return $conts;
+                                                    }
+                                                }
+                                            )
                                             ->imageHeight(250),
                                         RepeatableEntry::make('reports')
                                             ->label('Daftar Laporan Per Autorisasi')
@@ -170,10 +185,8 @@ class AutorisasisRelationManager extends RelationManager
                                                     ->icon('tabler-abc')
                                                     ->columnSpanFull(),
                                                 ImageEntry::make('lampiran')
-                                                    ->url(fn($state): string => asset('storage/' . $state))
-                                                    ->openUrlInNewTab()
-                                                    ->columnSpanFull()
                                                     ->imageHeight(250)
+                                                    ->imageGallery()
                                                     ->disk('public'),
                                                 Action::make('hapus')
                                                     ->color(Color::Red)

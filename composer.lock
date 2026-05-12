@@ -4,8 +4,93 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3558927acd5e136cf60496dffb77e58",
+    "content-hash": "73292464bdeef06d6d2dff134425b80b",
     "packages": [
+        {
+            "name": "al-saloul/filament-image-gallery",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/al-saloul/filament-image-gallery.git",
+                "reference": "68ed452b1a6fa1a943ba61292164441d09c62b3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/al-saloul/filament-image-gallery/zipball/68ed452b1a6fa1a943ba61292164441d09c62b3a",
+                "reference": "68ed452b1a6fa1a943ba61292164441d09c62b3a",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0 || ^4.0 || ^5.0",
+                "filament/forms": "^3.0 || ^4.0 || ^5.0",
+                "filament/infolists": "^3.0 || ^4.0 || ^5.0",
+                "filament/tables": "^3.0 || ^4.0 || ^5.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9 || ^8.0",
+                "orchestra/testbench": "^8.0 || ^9.0 || ^10.0",
+                "pestphp/pest": "^2.1 || ^3.0",
+                "pestphp/pest-plugin-arch": "^2.0 || ^3.0",
+                "pestphp/pest-plugin-laravel": "^2.0 || ^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Alsaloul\\ImageGallery\\ImageGalleryServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Alsaloul\\ImageGallery\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mohammed Alsaloul",
+                    "email": "eng.alsaloul.mohammed@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Filament plugin for displaying image galleries with zoom, rotate, and flip capabilities",
+            "homepage": "https://github.com/al-saloul/filament-image-gallery",
+            "keywords": [
+                "Viewer",
+                "al-saloul",
+                "filament",
+                "flip",
+                "flip-image",
+                "fullscreen-view",
+                "gallery-controls",
+                "image-gallery",
+                "image-navigation",
+                "image-preview",
+                "image-rotate",
+                "image-slider",
+                "image-viewer",
+                "laravel",
+                "lightbox",
+                "mirror-image",
+                "next-prev",
+                "photo-gallery",
+                "rotate",
+                "slideshow",
+                "zoom"
+            ],
+            "support": {
+                "issues": "https://github.com/al-saloul/filament-image-gallery/issues",
+                "source": "https://github.com/al-saloul/filament-image-gallery"
+            },
+            "time": "2026-01-20T21:36:59+00:00"
+        },
         {
             "name": "anourvalar/eloquent-serialize",
             "version": "1.3.4",
@@ -970,6 +1055,85 @@
             "time": "2024-07-16T11:13:48+00:00"
         },
         {
+            "name": "codewithdennis/filament-advanced-choice",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CodeWithDennis/filament-advanced-choice.git",
+                "reference": "847a60489816dbe46526f9d7c605ff71a37e601c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CodeWithDennis/filament-advanced-choice/zipball/847a60489816dbe46526f9d7c605ff71a37e601c",
+                "reference": "847a60489816dbe46526f9d7c605ff71a37e601c",
+                "shasum": ""
+            },
+            "require": {
+                "filament/forms": "^4.0|^5.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9||^8.0",
+                "phpstan/phpstan": "^2.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "FilamentAdvancedChoice": "CodeWithDennis\\FilamentAdvancedChoice\\Facades\\FilamentAdvancedChoice"
+                    },
+                    "providers": [
+                        "CodeWithDennis\\FilamentAdvancedChoice\\FilamentAdvancedChoiceServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CodeWithDennis\\FilamentAdvancedChoice\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CodeWithDennis",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Beautiful, customizable radio and checkbox form layouts for FilamentPHP.",
+            "homepage": "https://github.com/codewithdennis/filament-advanced-choice",
+            "keywords": [
+                "CodeWithDennis",
+                "Forms",
+                "checkbox",
+                "checkbox-list",
+                "filament",
+                "filament-advanced-choice",
+                "filament-forms",
+                "filament-plugin",
+                "filamentphp",
+                "laravel",
+                "livewire",
+                "radio",
+                "ui"
+            ],
+            "support": {
+                "issues": "https://github.com/codewithdennis/filament-advanced-choice/issues",
+                "source": "https://github.com/codewithdennis/filament-advanced-choice"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/CodeWithDennis",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-05-08T14:27:15+00:00"
+        },
+        {
             "name": "composer/semver",
             "version": "3.4.3",
             "source": {
@@ -1154,6 +1318,88 @@
                 }
             ],
             "time": "2025-02-21T08:52:11+00:00"
+        },
+        {
+            "name": "danihidayatx/image-optimizer",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danihidayatx/image-optimizer.git",
+                "reference": "63d7e2357cc822b2ee0a7b04617a17420376b3e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danihidayatx/image-optimizer/zipball/63d7e2357cc822b2ee0a7b04617a17420376b3e9",
+                "reference": "63d7e2357cc822b2ee0a7b04617a17420376b3e9",
+                "shasum": ""
+            },
+            "require": {
+                "filament/forms": "^3.0|^4.0|^5.0",
+                "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
+                "intervention/image": "^2.7|^3.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.19.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9|^8.0",
+                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.0|^4.4",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0|^4.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "ImageOptimizer": "DaniHidayatX\\ImageOptimizer\\Facades\\ImageOptimizer"
+                    },
+                    "providers": [
+                        "DaniHidayatX\\ImageOptimizer\\ImageOptimizerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DaniHidayatX\\ImageOptimizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dani Hidayat",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Josh Embling",
+                    "email": "joshembling@gmail.com",
+                    "role": "Original Creator"
+                }
+            ],
+            "description": "Optimize your Filament images before they reach your database. Forked from joshembling/image-optimizer for Filament v4 & v5 support.",
+            "homepage": "https://github.com/danihidayatx/image-optimizer",
+            "keywords": [
+                "danihidayatx",
+                "filament",
+                "filamentphp",
+                "image",
+                "image-optimizer",
+                "laravel",
+                "optimization"
+            ],
+            "support": {
+                "issues": "https://github.com/danihidayatx/image-optimizer/issues",
+                "source": "https://github.com/danihidayatx/image-optimizer"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/danihidayatx",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-04-24T06:04:26+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -3011,6 +3257,150 @@
                 "source": "https://github.com/vinkla/hashids/tree/5.0.2"
             },
             "time": "2023-02-23T15:00:54+00:00"
+        },
+        {
+            "name": "intervention/gif",
+            "version": "4.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/gif.git",
+                "reference": "c3598a16ebe7690cd55640c44144a9df383ea73c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/gif/zipball/c3598a16ebe7690cd55640c44144a9df383ea73c",
+                "reference": "c3598a16ebe7690cd55640c44144a9df383ea73c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^10.0 || ^11.0  || ^12.0",
+                "slevomat/coding-standard": "~8.0",
+                "squizlabs/php_codesniffer": "^3.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Gif\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
+                }
+            ],
+            "description": "Native PHP GIF Encoder/Decoder",
+            "homepage": "https://github.com/intervention/gif",
+            "keywords": [
+                "animation",
+                "gd",
+                "gif",
+                "image"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/gif/issues",
+                "source": "https://github.com/Intervention/gif/tree/4.2.4"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/interventionphp",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2026-01-04T09:27:23+00:00"
+        },
+        {
+            "name": "intervention/image",
+            "version": "3.11.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "cf04c8dd245697f701057c13d4bfe140d584e738"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/cf04c8dd245697f701057c13d4bfe140d584e738",
+                "reference": "cf04c8dd245697f701057c13d4bfe140d584e738",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "intervention/gif": "^4.2",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0",
+                "slevomat/coding-standard": "~8.0",
+                "squizlabs/php_codesniffer": "^4"
+            },
+            "suggest": {
+                "ext-exif": "Recommended to be able to read EXIF data properly."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io"
+                }
+            ],
+            "description": "PHP Image Processing",
+            "homepage": "https://image.intervention.io",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "resize",
+                "thumbnail",
+                "watermark"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/image/issues",
+                "source": "https://github.com/Intervention/image/tree/3.11.8"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/interventionphp",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2026-05-01T08:20:10+00:00"
         },
         {
             "name": "kirschbaum-development/eloquent-power-joins",
@@ -13734,5 +14124,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
