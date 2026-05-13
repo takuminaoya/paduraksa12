@@ -19,6 +19,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -508,8 +509,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                         ->authorize('selesai_laporan::masyarakats::laporan::masyarakat')
                         ->disabled(fn($record): bool => $record->autorisasi(TipeAutorisasi::SELESAI))
                         ->schema([
-                            TextInput::make('url')
-                                ->prefixIcon('tabler-link')
+                            Hidden::make('url')
+                                ->default(fn ($record) => route('preview.tanggapan', ["id" => $record->id]))
                                 ->required(),
                             MarkdownEditor::make('deskripsi')
                                 ->required(),

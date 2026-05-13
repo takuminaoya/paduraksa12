@@ -22,6 +22,7 @@
         "laravel-lang/lang": "^15.22",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "milon/barcode": "^13.1",
         "secondnetwork/blade-tabler-icons": "^3.34",
         "tapp/filament-authentication-log": "5.0"
     },

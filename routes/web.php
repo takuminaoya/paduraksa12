@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HalamanPublikSosmed;
 use App\Http\Controllers\PrintTestController;
 use App\Livewire\HalamanLaporan;
 use App\Livewire\HalamanNotifikasi;
@@ -17,7 +18,12 @@ Route::get('/publik', PublikAkses::class)->name('publik');
 Route::get('/daftar', HalamanLaporan::class)->name('daftar');
 
 Route::get('print/preview/{id}', [PrintTestController::class, 'preview']);
-Route::get('tanggapan/preview/{id}', [PrintTestController::class, 'tanggapan']);
+Route::get('tanggapan/preview/{id}', [PrintTestController::class, 'tanggapan'])->name('preview.tanggapan');
 
 Route::get('public/preview/{uuid}', [PrintTestController::class, 'viewLaporanPublic']);
+
+// untuk sosmed tim
+Route::prefix('sosmed/watch')->group(function() {
+    Route::get('/', [HalamanPublikSosmed::class, 'index'])->name('sosmed');
+});
 

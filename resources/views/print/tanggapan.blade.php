@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Dokumen - {{ $data->judul }}</title>
 </head>
 
 <body>
@@ -142,7 +142,7 @@
 
     <section class="body page-break">
         <header>
-            <img class="ctl" src="{{ public_path('storage/images/kop_surat.jpg') }}" width="100%" alt="">
+            <img class="ctl" src="{{ public_path('storage/images/kop.png') }}" width="100%" alt="">
         </header>
 
         <div class="content_di" style="width:100%;">
@@ -207,9 +207,8 @@
                     <td style="width:60%;">&nbsp;</td>
                     <td style="width:40%;">
                         <p class="hormat-saya">
-                        <div>Ditetapkan di : Ungasan</div>
-                        <img class="ctl" src="{{ public_path('storage/images/tte_new.jpg') }}" style="width:100%;"
-                            alt="">
+                            Ditetapkan di : Ungasan <br>
+                            Hormat Kami Tim Paduraksa Desa Ungasan
                         </p>
                     </td>
                 </tr>
@@ -217,14 +216,36 @@
 
             <div>
                 Tembusan disampaikan kepada : <br>
+                Dibuat Pemerintah Desa Ungasan <br>
                 Arsip
+            </div>
+
+            <div class="row" style="margin-top: 60px;">
+                <div class="col-sm-12">
+                    <div style="position:absolute; margin-top:1px; margin-left:20px;">
+                        {{-- {!! $barcode_kode !!} --}}
+                        {!! DNS2D::getBarcodeHTML('4445645656', 'QRCODE', 3, 3); !!}
+                        {{-- {!! DNS2D::getBarcodeSVG('4445645656', 'DATAMATRIX'); !!}
+                        <img src="{{ DNS1D::getBarcodePNG('4', 'C39+',3,33,array(1,1,1), true) }}" alt="" width="70px;"> --}}
+                    </div>
+
+                    <div style="padding-left:100px; font-size:11px;">
+                        Surat ini diajukan melalui Layanan Administrasi Desa Ungasan secara resmi dan
+                        sah yang keabsahannya dapat diakses melalui pindai QRCode yang tersedia pada
+                        dokumen ini atau tautan berikut<br>
+                        <strong>{{ $data->oautorisasi('SELESAI')->url }}</strong>
+                    </div>
+                    <div style="padding-left:100px; font-size:11px;">
+                        Informasi dan panduan terkait pemeriksaan keabsahan dokumen tersedia pada <strong>{{ url('/') }}</strong>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="body page-break">
         <header>
-            <img class="ctl" src="{{ public_path('storage/images/kop_surat.jpg') }}" width="100%" alt="">
+            <img class="ctl" src="{{ public_path('storage/images/kop.png') }}" width="100%" alt="">
         </header>
 
         <div class="content_di" style="margin-top: 2rem;">
@@ -293,7 +314,7 @@
 
     <section class="body">
         <header>
-            <img class="ctl" src="{{ public_path('storage/images/kop_surat.jpg') }}" width="100%" alt="">
+            <img class="ctl" src="{{ public_path('storage/images/kop.png') }}" width="100%" alt="">
         </header>
 
         <p class="kepada judul">
