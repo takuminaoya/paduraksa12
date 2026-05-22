@@ -207,7 +207,6 @@
                     <td style="width:60%;">&nbsp;</td>
                     <td style="width:40%;">
                         <p class="hormat-saya">
-                            Ditetapkan di : Ungasan <br>
                             Hormat Kami Tim Paduraksa Desa Ungasan
                         </p>
                     </td>
@@ -216,15 +215,14 @@
 
             <div>
                 Tembusan disampaikan kepada : <br>
-                Dibuat Pemerintah Desa Ungasan <br>
                 Arsip
             </div>
 
-            <div class="row" style="margin-top: 60px;">
+            <div class="row" style="margin-top: 80px;">
                 <div class="col-sm-12">
                     <div style="position:absolute; margin-top:1px; margin-left:20px;">
                         {{-- {!! $barcode_kode !!} --}}
-                        {!! DNS2D::getBarcodeHTML('4445645656', 'QRCODE', 3, 3); !!}
+                        {!! DNS2D::getBarcodeHTML(route('preview.tanggapan', ['id' => $data->id]), 'QRCODE', 2, 2); !!}
                         {{-- {!! DNS2D::getBarcodeSVG('4445645656', 'DATAMATRIX'); !!}
                         <img src="{{ DNS1D::getBarcodePNG('4', 'C39+',3,33,array(1,1,1), true) }}" alt="" width="70px;"> --}}
                     </div>
@@ -305,10 +303,20 @@
 
             <div class="line"></div>
 
-            Tanggapan atas Laporan :
-            <p>
-                {{ $data->getAutorisasiString('TINDAK_LANJUT', 'deskripsi') }}
-            </p>
+            @if ($data->anggotas)
+                <h3>Tim Verifikasi Lapangan</h3>
+                <ul>
+                    @foreach ($data->anggotas as $item)
+                        <li>
+                            {{ $item->nama }} <br>
+                            <small style="text-transform: capitalize; color:rgb(61, 60, 60);">{{ $item->jabatan }}</small>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+            
+            <h3>Hasil Tindak Lanjut</h3>
+            <p>{!! $data->oautorisasi('SELESAI')->deskripsi !!}</p>
         </div>
     </section>
 
@@ -323,7 +331,7 @@
 
         <div class="content_di">
             @php
-                $autorisasi = $data->oautorisasi('TINDAK_LANJUT');
+                $autorisasi = $data->oautorisasi('SELESAI');
                 $lampiran = $autorisasi->lampiran;
             @endphp
             @if ($lampiran)

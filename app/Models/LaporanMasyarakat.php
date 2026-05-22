@@ -89,6 +89,7 @@ class LaporanMasyarakat extends Model
             '[laporan.url]',
             '[laporan.nomor]',
             '[laporan.view]',
+            '[tindak_lanjut.jam_kegiatan]',
             '[tindak_lanjut.tanggal_kegiatan]',
             '[tindak_lanjut.titik_kumpul]',
             '[tindak_lanjut.tipe_penindakan]',
@@ -116,6 +117,7 @@ class LaporanMasyarakat extends Model
             '[laporan.nomor]' => $this->nomorSurat(),
             '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id),
             '[tindak_lanjut.tanggal_kegiatan]' => dateReformat($this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tanggal_kegiatan'), 1),
+            '[tindak_lanjut.jam_kegiatan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'jam_kegiatan'),
             '[tindak_lanjut.titik_kumpul]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'titik_kumpul'), 
             '[tindak_lanjut.tipe_penindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tipe_penindakan'),
         ];
@@ -144,6 +146,7 @@ class LaporanMasyarakat extends Model
                 '[laporan.nomor]' => $this->nomorSurat(),
                 '[laporan.view]' => url('admin/laporan-masyarakats/' . $this->id),
                 '[tindak_lanjut.tanggal_kegiatan]' => dateReformat($this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tanggal_kegiatan'), 1),
+                '[tindak_lanjut.jam_kegiatan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'jam_kegiatan'),
                 '[tindak_lanjut.titik_kumpul]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'titik_kumpul'), 
                 '[tindak_lanjut.tipe_penindakan]' => $this->getAutorisasiString(TipeAutorisasi::TINDAK_LANJUT, 'tipe_penindakan'),
 
@@ -229,5 +232,9 @@ class LaporanMasyarakat extends Model
             return $data->reports;
 
         return [];
+    }
+
+    public function getTemplate(string $indexName){
+        return $this->whatsapp_templates[$indexName];
     }
 }

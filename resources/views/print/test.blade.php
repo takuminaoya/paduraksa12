@@ -110,7 +110,7 @@
 
     <section class="body page-break">
         <header>
-            <img class="ctl" src="{{ public_path('storage/images/banner.jpg') }}" width="30%" alt="">
+            <img class="ctl" src="{{ public_path('storage/images/kop.png') }}" width="100%" alt="">
         </header>
 
         <div class="content" style="width:100%;">
@@ -225,7 +225,7 @@
 
     <section>
         <header>
-            <img class="ctl" src="{{ public_path('storage/images/banner.jpg') }}" width="30%" alt="">
+            <img class="ctl" src="{{ public_path('storage/images/kop.png') }}" width="100%" alt="">
         </header>
 
         <div class="title">
@@ -274,8 +274,6 @@
             @endif
         </div>
     </section>
-
-
 </body>
 
 </html>

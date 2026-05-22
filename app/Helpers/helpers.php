@@ -165,7 +165,7 @@ function dateReformat($tanggal, $tampilkanHari = false, $bulanDipersingkat = fal
     }
 }
 
-function autoSendWhatsapp($id, $status = null, $nomor = null, string $slug = 'whatsapp-regis-baru-ke-admin')
+function autoSendWhatsapp($id, $status = null, $nomor = null, string $slug = 'whatsapp-regis-baru-ke-admin', $withNumber = '62')
 {
     $lap = LaporanMasyarakat::find($id);
 
@@ -173,9 +173,8 @@ function autoSendWhatsapp($id, $status = null, $nomor = null, string $slug = 'wh
 
         // Jika status tidak sama dengan null
         if ($status) {
-            $template = ApplicationSetting::where('key', $lap->whatsapp_templates[$status]['slug'])->value('value');
-
-            $templateIsi = WhatsappTemplate::find($template);
+            $templateIsi = WhatsappTemplate::where('slug', $lap->whatsapp_templates[$status]['slug'])->first();
+            $template = $templateIsi->id;
         } else {
             // jika null dan juga $nomor sama dengan null
             $templateIsi = WhatsappTemplate::where('slug', $slug)->first();
@@ -185,10 +184,11 @@ function autoSendWhatsapp($id, $status = null, $nomor = null, string $slug = 'wh
         $reformatedIsi = $lap->reformatStringWithTag($templateIsi->isi, $lap->id);
 
         // jika nomor tidak null
+        $noCountry = $withNumber ? $withNumber : '';
         if($nomor){
-            $message = Whapify::sendSingleChat('62' . $lap->no_telpon, $reformatedIsi);
+            $message = Whapify::sendSingleChat($noCountry . $nomor, $reformatedIsi);
         } else {
-            $message = Whapify::sendSingleChat('62' . $nomor, $reformatedIsi);
+            $message = Whapify::sendSingleChat($noCountry . $lap->no_telpon, $reformatedIsi);
         }
 
         if ($message) {

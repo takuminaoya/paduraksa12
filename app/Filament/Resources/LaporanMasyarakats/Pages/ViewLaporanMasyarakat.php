@@ -25,6 +25,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Grid;
@@ -183,7 +184,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->send()
                                 ;
 
-                                autoSendWhatsapp($record->id, 'verifikasi');
+                                autoSendWhatsapp($record->id, null, $record->no_telpon, $record->getTemplate('verifikasi')['slug']);
                             }
                         ),
                     Action::make('tindak_lanjut_laporan')
@@ -201,6 +202,11 @@ class ViewLaporanMasyarakat extends ViewRecord
                                         ->options(TipePenindakan::query()->pluck('nama', 'id')),
                                     DatePicker::make('tanggal_kegiatan')
                                         ->prefixIcon('tabler-calendar')
+                                        ->required(),
+                                    TimePicker::make('jam_kegiatan')
+                                        ->prefixIcon('tabler-clock')
+                                        ->native(false)
+                                        ->seconds(false)
                                         ->required(),
                                     // Jika dibutuhkan anggota
                                     Section::make('Daftar Staff Aparatur Desa')
@@ -405,7 +411,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                                                     'jabatan' => $j->nama
                                                 ];
 
-                                                autoSendWhatsapp($record->id, null, $dt->phone, 'whatsapp-anggota-penanganan');
+                                                autoSendWhatsapp($record->id, null, $dt->phone, 'whatsapp-anggota-penanganan', null);
 
 
                                                 $ap = new AnggotaPenindakan();
@@ -426,7 +432,7 @@ class ViewLaporanMasyarakat extends ViewRecord
                                                     'jabatan' => $lmbb->nama
                                                 ];
 
-                                                autoSendWhatsapp($record->id, null, $lmbb->no_telp, 'whatsapp-anggota-penanganan');
+                                                autoSendWhatsapp($record->id, null, $lmbb->no_telp, 'whatsapp-anggota-penanganan', null);
 
 
                                                 $ap = new AnggotaPenindakan();
@@ -453,7 +459,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                         ->sendToDatabase(superAdmin())
                                         ->send();
 
-                                    autoSendWhatsapp($record->id, 'tindak_lanjut');
+                                        autoSendWhatsapp($record->id, null, $record->no_telpon, $record->getTemplate('tindak_lanjut')['slug']);
+
                                 } catch (Exception $e){
                                     dd($e);
                                     Notification::make()
@@ -500,7 +507,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->sendToDatabase(superAdmin())
                                     ->send();
 
-                                autoSendWhatsapp($record->id, 'batal');
+                                    autoSendWhatsapp($record->id, null, $record->no_telpon, $record->getTemplate('batal')['slug']);
+
                             }
                         ),
                     Action::make('selesai_laporan')
@@ -575,7 +583,8 @@ class ViewLaporanMasyarakat extends ViewRecord
                                     ->sendToDatabase(superAdmin())
                                     ->send();
 
-                                autoSendWhatsapp($record->id, 'selesai');
+                                    autoSendWhatsapp($record->id, null, $record->no_telpon, $record->getTemplate('selesai')['slug']);
+
                             }
                         ),
                 ])
