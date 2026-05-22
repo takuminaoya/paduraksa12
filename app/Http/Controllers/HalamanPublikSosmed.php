@@ -14,7 +14,7 @@ class HalamanPublikSosmed extends Controller
 {
     public function index() {
         $results = [];
-        $lps = LaporanMasyarakat::limit(12)->latest()->get();
+        $lps = LaporanMasyarakat::where('status', 'SELESAI')->latest()->get();
 
         foreach($lps as $l){
             $lampirans = [];
@@ -23,9 +23,44 @@ class HalamanPublikSosmed extends Controller
                 foreach($l->lampiran as $lp){
                     $lampirans[] = [
                         "time" => dateReformat(date('Y-m-d'), 1),
-                        "text" => asset('storage/' . $lp)
+                        "text" => '',
+                        "img" => null,
+                        "atts" => [
+                            asset('storage/' . $lp)
+                        ]
                     ];
+
                 }
+            }
+
+            // tambhakan lampiran tindak lanjut
+            $tindak_lanjut = $l->oautorisasi(TipeAutorisasi::TINDAK_LANJUT);
+            if($tindak_lanjut){
+                $lampirans[] = [
+                    "time" => dateReformat($tindak_lanjut->tanggal_autorisasi, 1),
+                    "text" => $tindak_lanjut->deskripsi,
+                    "img" => null,
+                    "atts" => []
+
+                ];
+            }
+
+            $selesai = $l->oautorisasi(TipeAutorisasi::SELESAI);
+            if($selesai){
+                $attse = [];
+
+                if($selesai->lampiran){
+                    foreach($selesai->lampiran as $al){
+                        $attse[] = asset('storage/' . $al);
+                    }
+                }
+
+                $lampirans[] = [
+                    "time" => dateReformat($selesai->tanggal_autorisasi, 1),
+                    "text" => $selesai->deskripsi,
+                    "img" => null,
+                    "atts" => $attse
+                ];
             }
 
             $results[] = [

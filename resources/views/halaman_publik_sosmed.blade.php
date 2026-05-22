@@ -860,7 +860,11 @@ function openModal(id) {
           <div class="timeline-item">
             <div class="timeline-time">${t.time}</div>
             <div class="timeline-text">
-                <img src="${t.text}"></img>
+                <p>${t.text}</p>
+                ${t.atts.map(a =>  `
+                  <img src="${a}"></img>
+                `).join('')}
+                
             </div>
           </div>
         `).join('')}
